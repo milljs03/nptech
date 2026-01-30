@@ -52,7 +52,7 @@
         </header>
 
         <!-- Pricing Grid Section -->
-        <section class="pricing-container">
+        <section class="pricing-section-outer">
             <!-- Loading State -->
             <div id="loading-indicator" class="loading-spinner">
                 <div class="spinner"></div>
@@ -67,6 +67,23 @@
             <!-- Dynamic Pricing Grid -->
             <div id="plans-grid" class="pricing-container hidden">
                 <!-- Plans will be injected here by JS -->
+            </div>
+        </section>
+
+        <!-- Promotions / Save More Section -->
+        <section id="promotions-section" class="promotions-section hidden fade-in-section">
+            <div class="container">
+                <div class="promo-banner">
+                    <div class="promo-content">
+                        <h2 id="promo-title"></h2>
+                        <p id="promo-desc"></p>
+                        <ul id="promo-items" class="promo-list"></ul>
+                        <small id="promo-fine-print" class="promo-fine-print"></small>
+                    </div>
+                    <div class="promo-badge-icon">
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+                </div>
             </div>
         </section>
 

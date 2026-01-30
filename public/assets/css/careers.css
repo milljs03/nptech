@@ -1,0 +1,210 @@
+/* careers.css - NPTech Careers Page */
+
+/* --- Page Header --- */
+.page-header {
+    background: linear-gradient(135deg, #0f172a 0%, #0663AF 100%);
+    color: white;
+    text-align: center;
+    padding: 100px 20px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 40px;
+    background: white;
+    clip-path: polygon(0 100%, 100% 100%, 100% 0);
+}
+
+.header-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    font-family: var(--font-heading);
+}
+
+.header-subtitle {
+    font-size: 1.25rem;
+    max-width: 700px;
+    margin: 0 auto;
+    color: #cbd5e1;
+    font-weight: 400;
+}
+
+/* --- Benefits Section --- */
+.benefits-section {
+    padding: 80px 20px;
+    background-color: white;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--npt-black);
+    margin-bottom: 50px;
+    font-family: var(--font-heading);
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.benefit-card {
+    padding: 40px 30px;
+    background: #f8fafc;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+}
+
+.benefit-icon {
+    font-size: 2.5rem;
+    color: var(--npt-blue);
+    margin-bottom: 20px;
+}
+
+.benefit-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    color: var(--npt-black);
+}
+
+.benefit-card p {
+    color: #64748b;
+    line-height: 1.6;
+}
+
+/* --- Jobs Section --- */
+.jobs-section {
+    padding: 80px 20px;
+    background-color: #f1f5f9;
+    min-height: 400px;
+}
+
+.job-list {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.job-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    border-left: 5px solid var(--npt-blue);
+}
+
+.job-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.job-info h3 {
+    font-size: 1.4rem;
+    color: var(--npt-black);
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.job-meta {
+    display: flex;
+    gap: 15px;
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.job-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.job-description {
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-width: 600px;
+}
+
+.btn-apply {
+    background-color: var(--npt-blue);
+    color: white;
+    padding: 10px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.btn-apply:hover {
+    background-color: var(--npt-dark-blue);
+}
+
+/* Loading & Empty States */
+.loading-spinner {
+    text-align: center;
+    padding: 40px;
+    color: #64748b;
+}
+
+.spinner {
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid var(--npt-blue);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.no-jobs-box {
+    text-align: center;
+    padding: 60px;
+    color: #64748b;
+    font-size: 1.1rem;
+    background: white;
+    border-radius: 12px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .header-title { font-size: 2.5rem; }
+    
+    .job-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    
+    .btn-apply {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .job-meta {
+        flex-wrap: wrap;
+    }
+}

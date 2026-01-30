@@ -115,6 +115,7 @@ document.querySelectorAll('.nav-item').forEach(btn => {
         if (tab === 'leads') loadLeads();
         if (tab === 'promotions') loadPromotions();
         if (tab === 'plans') loadPlans();
+        if (tab === 'jobs') loadJobs(); // NEW
         if (tab === 'install') loadInstallSteps(); 
         if (tab === 'neighborhoods') loadNeighborhoods();
         if (tab === 'employees') loadEmployees();
@@ -315,6 +316,52 @@ async function loadPlans() {
     } catch (err) {
         console.error(err);
         container.innerHTML = '<p style="color:red;">Error loading plans.</p>';
+    }
+}
+
+// --- JOBS (CAREERS) ---
+async function loadJobs() {
+    const container = document.getElementById('jobs-list');
+    if(!container) return;
+    container.innerHTML = '<p>Loading...</p>';
+    
+    try {
+        const ref = collection(db, 'artifacts', APP_ID, 'public', 'data', 'jobs');
+        const snapshot = await getDocs(ref);
+        
+        container.innerHTML = '';
+        snapshot.forEach(doc => {
+            const job = doc.data();
+            const card = document.createElement('div');
+            card.className = 'admin-card';
+            const statusBadge = job.isActive !== false ? '<span class="badge bg-green">Active</span>' : '<span class="badge bg-gray">Closed</span>';
+            
+            card.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h3 style="margin:0;">${job.title}</h3>
+                    ${statusBadge}
+                </div>
+                <p style="font-size:0.9rem; color:#64748b;">${job.location || 'New Paris, IN'} | ${job.type || 'Full Time'}</p>
+                <div class="card-actions">
+                    ${isAdmin ? `<button class="btn-sm btn-outline btn-edit" data-id="${doc.id}" data-type="job">Edit</button>` : ''}
+                    ${isAdmin ? `<button class="btn-sm btn-delete" data-id="${doc.id}" data-type="job">Delete</button>` : ''}
+                </div>
+            `;
+            container.appendChild(card);
+            
+            if(isAdmin) {
+                const editBtn = card.querySelector('.btn-edit');
+                if(editBtn) editBtn.addEventListener('click', () => openEditModal('job', doc.id, job));
+                const delBtn = card.querySelector('.btn-delete');
+                if(delBtn) delBtn.addEventListener('click', () => deleteItem('jobs', doc.id, 'job')); // refreshType 'job' -> calls loadJobs
+            }
+        });
+
+        if (snapshot.empty) container.innerHTML = '<p>No job postings found. Add one!</p>';
+
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p style="color:red;">Error loading jobs.</p>';
     }
 }
 
@@ -531,6 +578,22 @@ function openEditModal(type, id, data = null) {
             <div><label class="form-label">Description</label><textarea name="description" class="form-control" rows="3">${data?.description || ''}</textarea></div>
             <div style="margin-top:10px;"><input type="checkbox" name="isPopular" ${data?.isPopular ? 'checked' : ''}> <label class="form-label" style="display:inline;">Best Value (Highlight)</label></div>
         `;
+    } else if (type === 'job') {
+        // NEW Job Fields
+        modalFields.innerHTML = `
+            <div><label class="form-label">Job Title</label><input type="text" name="title" class="form-control" value="${data?.title || ''}" required></div>
+            <div><label class="form-label">Location</label><input type="text" name="location" class="form-control" value="${data?.location || 'New Paris, IN'}" required></div>
+            <div><label class="form-label">Type</label>
+                <select name="type" class="form-control">
+                    <option value="Full Time" ${data?.type === 'Full Time' ? 'selected' : ''}>Full Time</option>
+                    <option value="Part Time" ${data?.type === 'Part Time' ? 'selected' : ''}>Part Time</option>
+                    <option value="Contract" ${data?.type === 'Contract' ? 'selected' : ''}>Contract</option>
+                </select>
+            </div>
+            <div><label class="form-label">Short Description</label><textarea name="description" class="form-control" rows="3" required>${data?.description || ''}</textarea></div>
+            <div><label class="form-label">Indeed URL (Optional)</label><input type="url" name="indeedUrl" class="form-control" value="${data?.indeedUrl || ''}" placeholder="https://indeed.com/..."></div>
+            <div style="margin-top:10px;"><input type="checkbox" name="isActive" ${data?.isActive !== false ? 'checked' : ''}> <label class="form-label" style="display:inline;">Active Posting</label></div>
+        `;
     } else if (type === 'hood') {
          modalFields.innerHTML = `
             <div><label class="form-label">Neighborhood Name</label><input type="text" name="name" class="form-control" value="${data?.name || ''}" required></div>
@@ -605,9 +668,14 @@ if(editForm) {
             const popCheck = editForm.querySelector('[name="isPopular"]');
             data.isPopular = !!(popCheck && popCheck.checked);
         }
+        if (type === 'job') {
+            const activeCheck = editForm.querySelector('[name="isActive"]');
+            data.isActive = !!(activeCheck && activeCheck.checked);
+        }
 
         let collectionName;
         if (type === 'plan') collectionName = 'plans';
+        else if (type === 'job') collectionName = 'jobs'; // NEW
         else if (type === 'hood') collectionName = 'neighborhoods';
         else if (type === 'testimonial') collectionName = 'testimonials';
         else if (type === 'employee') collectionName = 'employees';
@@ -627,6 +695,7 @@ if(editForm) {
             
             // Refresh appropriate list
             if (type === 'plan') loadPlans();
+            if (type === 'job') loadJobs(); // NEW
             if (type === 'hood') loadNeighborhoods();
             if (type === 'testimonial') loadTestimonials();
             if (type === 'employee') loadEmployees();
@@ -647,6 +716,7 @@ async function deleteItem(collectionName, id, refreshType) {
     try {
         await deleteDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', collectionName, id));
         if (refreshType === 'plan') loadPlans();
+        if (refreshType === 'job') loadJobs();
         if (refreshType === 'neighborhoods') loadNeighborhoods();
         if (refreshType === 'testimonials') loadTestimonials();
         if (refreshType === 'employees') loadEmployees();
@@ -661,6 +731,9 @@ async function deleteItem(collectionName, id, refreshType) {
 // Add Button Listeners
 const addPlanBtn = document.getElementById('add-plan-btn');
 if(addPlanBtn) addPlanBtn.addEventListener('click', () => openEditModal('plan'));
+
+const addJobBtn = document.getElementById('add-job-btn'); // NEW
+if(addJobBtn) addJobBtn.addEventListener('click', () => openEditModal('job'));
 
 const addHoodBtn = document.getElementById('add-hood-btn');
 if(addHoodBtn) addHoodBtn.addEventListener('click', () => openEditModal('hood'));

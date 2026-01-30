@@ -1,7 +1,7 @@
 // public/assets/js/residential.js
 import { db, app } from './config/firebase-config.js';
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { collection, getDocs, query, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
     
@@ -70,30 +70,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // --- 3. Render Testimonials (Hardcoded for now) ---
-    const tGrid = document.getElementById('testimonials-grid');
-    if (tGrid) {
-        tGrid.innerHTML = `
-            <div class="testimonial-card">
-                <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
-                <p class="quote-text">"Since switching to NPTech, my work-from-home connection has been flawless. The local support team is actually helpful, unlike the big cable companies."</p>
-                <div class="quote-author"><strong>Sarah J.</strong><span>New Paris, IN</span></div>
-            </div>
-            <div class="testimonial-card">
-                <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
-                <p class="quote-text">"We have gamers and streamers in the house. The 1 Gig plan handles it all without a glitch. Highly recommend."</p>
-                <div class="quote-author"><strong>Mike T.</strong><span>New Paris, IN</span></div>
-            </div>
-            <div class="testimonial-card">
-                <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
-                <p class="quote-text">"Fair pricing and honest service. It feels good to support a local business that actually cares about the community."</p>
-                <div class="quote-author"><strong>Linda M.</strong><span>Millersburg, IN</span></div>
-            </div>
-        `;
-    }
+    // --- 3. Load Testimonials ---
+    loadTestimonials();
 
     // --- 4. Load Timeline ---
     loadTimeline();
+
+    // --- 5. Load Promotions ---
+    loadPromotions();
 });
 
 // --- Helper: Generate Plan Card ---
@@ -150,7 +134,7 @@ function injectAddonsSection(targetElement) {
     if (document.querySelector('.addons-wrapper')) return;
 
     const addonsHTML = `
-    <div class="addons-wrapper fade-in-section">
+    <div class="addons-wrapper fade-in-section is-visible">
         <!-- Card 1: Voice -->
         <div class="addons-card">
             <div class="card-header">
@@ -238,4 +222,79 @@ function updateTimelineView(index, steps) {
         if(i === index) b.classList.add('active');
         else b.classList.remove('active');
     });
+}
+
+// --- Helper: Load Promotions ---
+async function loadPromotions() {
+    const section = document.getElementById('promotions-section');
+    if (!section) return;
+
+    try {
+        const appId = '162296779236';
+        const promoRef = doc(db, 'artifacts', appId, 'public', 'data', 'site_content', 'promotions');
+        const snapshot = await getDoc(promoRef);
+
+        if (snapshot.exists()) {
+            const data = snapshot.data();
+            
+            // Only show if there is a title or description
+            if (data.title || data.description) {
+                document.getElementById('promo-title').textContent = data.title || 'Special Offers';
+                document.getElementById('promo-desc').textContent = data.description || '';
+                document.getElementById('promo-fine-print').textContent = data.finePrint || '';
+
+                const listEl = document.getElementById('promo-items');
+                if (listEl && Array.isArray(data.items)) {
+                    listEl.innerHTML = data.items.map(item => `<li><i class="fa-solid fa-check-circle"></i> ${item}</li>`).join('');
+                }
+
+                section.classList.remove('hidden');
+            }
+        }
+    } catch (error) {
+        console.error("Error loading promotions:", error);
+    }
+}
+
+// --- Helper: Load Testimonials ---
+async function loadTestimonials() {
+    const tGrid = document.getElementById('testimonials-grid');
+    if (!tGrid) return;
+
+    try {
+        const appId = '162296779236';
+        const ref = collection(db, 'artifacts', appId, 'public', 'data', 'testimonials');
+        const snapshot = await getDocs(ref);
+
+        if (snapshot.empty) {
+            // Fallback to defaults if DB is empty
+            tGrid.innerHTML = `
+                <div class="testimonial-card">
+                    <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+                    <p class="quote-text">"Since switching to NPTech, my work-from-home connection has been flawless. The local support team is actually helpful, unlike the big cable companies."</p>
+                    <div class="quote-author"><strong>Sarah J.</strong><span>New Paris, IN</span></div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+                    <p class="quote-text">"We have gamers and streamers in the house. The 1 Gig plan handles it all without a glitch. Highly recommend."</p>
+                    <div class="quote-author"><strong>Mike T.</strong><span>New Paris, IN</span></div>
+                </div>
+            `;
+            return;
+        }
+
+        tGrid.innerHTML = '';
+        snapshot.forEach(doc => {
+            const t = doc.data();
+            tGrid.innerHTML += `
+                <div class="testimonial-card">
+                    <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+                    <p class="quote-text">"${t.quote}"</p>
+                    <div class="quote-author"><strong>${t.author}</strong><span>${t.location || ''}</span></div>
+                </div>
+            `;
+        });
+    } catch (error) {
+        console.error("Error loading testimonials:", error);
+    }
 }

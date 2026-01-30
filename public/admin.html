@@ -53,6 +53,10 @@
                 <button class="nav-item" data-tab="plans">
                     <i class="fa-solid fa-tags"></i> Pricing Plans
                 </button>
+                <!-- Careers Tab -->
+                <button class="nav-item" data-tab="jobs">
+                    <i class="fa-solid fa-briefcase"></i> Careers
+                </button>
                 <button class="nav-item" data-tab="install">
                     <i class="fa-solid fa-clipboard-list"></i> Install Process
                 </button>
@@ -65,7 +69,6 @@
                 <button class="nav-item" data-tab="testimonials">
                     <i class="fa-solid fa-comment-dots"></i> Testimonials
                 </button>
-                <!-- Added News Tab -->
                 <button class="nav-item" data-tab="news">
                     <i class="fa-solid fa-newspaper"></i> News
                 </button>
@@ -180,6 +183,17 @@
                 <div id="plans-list" class="cards-grid"></div>
             </section>
 
+            <!-- Jobs View -->
+            <section id="view-jobs" class="view-section">
+                <div class="page-header">
+                    <h1>Job Postings</h1>
+                    <button id="add-job-btn" class="btn btn-primary admin-only hidden"><i class="fa-solid fa-plus"></i> Post Job</button>
+                </div>
+                <div id="jobs-list" class="cards-grid">
+                    <!-- Populated via JS -->
+                </div>
+            </section>
+
             <!-- Install Process View -->
             <section id="view-install" class="view-section">
                 <div class="page-header">
@@ -258,7 +272,7 @@
         </div>
     </div>
 
-    <!-- Updated Script Path: from assets/js/admin.js to js/admin.js -->
+    <!-- Updated Script Path: pointing to js/admin.js -->
     <script type="module" src="js/admin.js"></script>
 </body>
 </html>
