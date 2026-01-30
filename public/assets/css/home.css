@@ -1,0 +1,240 @@
+/* home.css - NPTech Landing Page Styles */
+
+/* --- Hero Section --- */
+.hero {
+    position: relative;
+    /* Updated Gradient: Deep Navy to NPTech Blue for a premium corporate feel */
+    background: linear-gradient(135deg, #0f172a 0%, #0663AF 100%);
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 20px 80px;
+    overflow: hidden;
+    color: white;
+    text-align: center;
+}
+
+/* Background Pattern */
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    /* Subtle geometric grid */
+    background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+}
+
+.hero-content {
+    max-width: 900px;
+    z-index: 2;
+    padding: 0 20px;
+}
+
+.hero-title {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em; /* Tighter tracking for modern look */
+    color: white;
+}
+
+/* Updated Highlight Text */
+.highlight-text {
+    color: var(--npt-lt-blue);
+    background: -webkit-linear-gradient(45deg, var(--npt-lt-blue), #e2e8f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    color: #cbd5e1; /* Lighter slate for better contrast */
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+/* --- Search Container --- */
+.availability-search-container {
+    max-width: 650px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+}
+
+.search-input-wrapper {
+    position: relative;
+    background: white;
+    border-radius: 50px;
+    padding: 8px; /* More breathing room */
+    display: flex;
+    align-items: center;
+    /* Soft, deep shadow for depth */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.search-input-wrapper:focus-within {
+    transform: translateY(-2px);
+    box-shadow: 0 25px 35px -5px rgba(6, 99, 175, 0.3); /* Blue glow on focus */
+}
+
+.search-icon {
+    width: 24px;
+    height: 24px;
+    color: #94a3b8;
+    margin-left: 15px;
+    flex-shrink: 0;
+}
+
+#cfn-address-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 12px 20px 12px 10px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    color: var(--npt-black);
+    background: transparent;
+}
+
+#redirect-message {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: var(--npt-lt-blue);
+    font-weight: 600;
+}
+
+/* --- Divisions Section --- */
+.divisions-section {
+    padding: 100px 20px; /* Increased padding */
+    background-color: #f8fafc; /* Crisp light gray background */
+}
+
+.section-title-center {
+    text-align: center;
+    font-size: 2.25rem;
+    margin-bottom: 60px;
+    color: var(--npt-black);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    position: relative;
+}
+
+/* Decorative underline for title */
+.section-title-center::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background-color: var(--npt-blue);
+    margin: 15px auto 0;
+    border-radius: 2px;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.service-card {
+    background: white;
+    border-radius: 16px; /* Softer corners */
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #e2e8f0; /* Subtle border */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 32px;
+    position: relative;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    height: 100%; /* Force equal height in grid */
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: var(--npt-blue);
+}
+
+.service-icon {
+    height: 55px; /* Fixed height for alignment */
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.service-icon img {
+    max-height: 100%;
+    max-width: 180px;
+    object-fit: contain;
+    object-position: left;
+    
+    /* Professional touch: Grayscale until hover */
+    filter: grayscale(100%);
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.service-card:hover .service-icon img {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+/* Wrapper to ensure content pushes button down */
+.service-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-content h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--npt-black);
+    letter-spacing: -0.01em;
+}
+
+.service-content p {
+    color: #64748b; /* Slate 500 for softer reading */
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    flex-grow: 1; /* Pushes the link to the bottom */
+}
+
+.service-link {
+    font-weight: 700;
+    color: var(--npt-blue);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.2s ease;
+    margin-top: auto; /* Align to bottom of container */
+}
+
+.service-card:hover .service-link {
+    gap: 12px;
+    color: var(--npt-dark-blue);
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+    .hero-title { font-size: 2.5rem; }
+    .hero { padding-top: 100px; }
+}

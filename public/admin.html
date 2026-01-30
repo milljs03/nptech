@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | NPTech</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="assets/images/NPtech_logo.png" type="image/png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-card">
+            <img src="assets/images/NPtech_logo.png" alt="NPTech" class="login-logo">
+            <h2>Admin Portal</h2>
+            <p>Please sign in with your corporate Google account (@nptel.com) to continue.</p>
+            <div id="login-error" class="error-msg hidden"></div>
+            <button id="google-login-btn" class="google-btn">
+                <i class="fa-brands fa-google"></i> Sign in with Google
+            </button>
+        </div>
+    </div>
+
+    <!-- Admin App (Hidden until logged in) -->
+    <div id="admin-app" class="admin-layout hidden">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Admin</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-tab="dashboard">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </button>
+                <button class="nav-item" data-tab="leads">
+                    <i class="fa-solid fa-inbox"></i> Leads & Forms
+                </button>
+                <button class="nav-item" data-tab="promotions">
+                    <i class="fa-solid fa-percent"></i> Promotions
+                </button>
+                <button class="nav-item" data-tab="plans">
+                    <i class="fa-solid fa-tags"></i> Pricing Plans
+                </button>
+                <button class="nav-item" data-tab="install">
+                    <i class="fa-solid fa-clipboard-list"></i> Install Process
+                </button>
+                <button class="nav-item" data-tab="neighborhoods">
+                    <i class="fa-solid fa-map-location-dot"></i> Neighborhoods
+                </button>
+                <button class="nav-item" data-tab="employees">
+                    <i class="fa-solid fa-users"></i> Employees
+                </button>
+                <button class="nav-item" data-tab="testimonials">
+                    <i class="fa-solid fa-comment-dots"></i> Testimonials
+                </button>
+                <!-- Added News Tab -->
+                <button class="nav-item" data-tab="news">
+                    <i class="fa-solid fa-newspaper"></i> News
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <img id="user-avatar" src="" alt="User">
+                    <div class="user-details">
+                        <span id="user-name">Loading...</span>
+                        <span id="user-role" class="badge">Viewer</span>
+                    </div>
+                </div>
+                <button id="logout-btn" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content-area">
+            
+            <!-- Dashboard View -->
+            <section id="view-dashboard" class="view-section active">
+                <div class="page-header">
+                    <h1>Dashboard Overview</h1>
+                    <p>Welcome back, <span class="user-name-display">Admin</span>.</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Leads</h3>
+                        <p class="stat-value" id="stat-leads">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Plans</h3>
+                        <p class="stat-value" id="stat-plans">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Neighborhoods</h3>
+                        <p class="stat-value" id="stat-hoods">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Promotions View -->
+            <section id="view-promotions" class="view-section">
+                <div class="page-header">
+                    <h1>Save More / Promotions</h1>
+                    <p>Manage the dynamic content for the "Save More" section on the residential page.</p>
+                </div>
+                <div class="admin-card" style="max-width: 800px;">
+                    <form id="promotions-form">
+                        <div style="margin-bottom: 20px;">
+                            <label class="form-label">Section Title</label>
+                            <input type="text" id="promo-title" name="title" class="form-control" placeholder="e.g. Save More" required>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label class="form-label">Description</label>
+                            <textarea id="promo-description" name="description" class="form-control" rows="3" placeholder="e.g. We're committed to our community..."></textarea>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label class="form-label">Discounts / Offers (One per line)</label>
+                            <textarea id="promo-items" name="items" class="form-control" rows="5" placeholder="$5/mo if you sign up for autopay&#10;$5/mo discount for teachers*"></textarea>
+                            <small style="color: #64748b;">Enter each bullet point on a new line.</small>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label class="form-label">Fine Print</label>
+                            <input type="text" id="promo-finePrint" name="finePrint" class="form-control" placeholder="e.g. *Teacher discount requires valid school ID.">
+                        </div>
+                        <div style="display:flex; justify-content: flex-end;">
+                            <button type="submit" class="btn btn-primary">Save Content</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Leads View -->
+            <section id="view-leads" class="view-section">
+                <div class="page-header">
+                    <h1>Form Submissions</h1>
+                    <div class="filter-controls">
+                        <select id="lead-filter" class="form-select">
+                            <option value="all">All Forms</option>
+                            <option value="quote">Business Quotes</option>
+                            <option value="builder">Builder Inquiries</option>
+                            <option value="support">Support Tickets</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leads-table-body">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Plans View -->
+            <section id="view-plans" class="view-section">
+                <div class="page-header">
+                    <h1>Pricing Plans</h1>
+                    <button id="add-plan-btn" class="btn btn-primary admin-only hidden"><i class="fa-solid fa-plus"></i> Add Plan</button>
+                </div>
+                <div id="plans-list" class="cards-grid"></div>
+            </section>
+
+            <!-- Install Process View -->
+            <section id="view-install" class="view-section">
+                <div class="page-header">
+                    <h1>Fiber Installation Process</h1>
+                    <button id="add-step-btn" class="btn btn-primary admin-only hidden"><i class="fa-solid fa-plus"></i> Add Step</button>
+                </div>
+                <p style="margin-bottom: 20px; color: #64748b;">Manage the timeline steps shown on the residential page.</p>
+                <div id="install-steps-list" class="cards-grid"></div>
+            </section>
+
+            <!-- Neighborhoods View -->
+            <section id="view-neighborhoods" class="view-section">
+                <div class="page-header">
+                    <h1>Neighborhood Status</h1>
+                    <button id="add-hood-btn" class="btn btn-primary admin-only hidden"><i class="fa-solid fa-plus"></i> Add Neighborhood</button>
+                </div>
+                <div id="hoods-list" class="cards-grid"></div>
+            </section>
+
+            <!-- Employees View -->
+            <section id="view-employees" class="view-section">
+                <div class="page-header">
+                    <h1>Our Team</h1>
+                    <button id="add-employee-btn" class="btn btn-primary admin-only hidden"><i class="fa-solid fa-plus"></i> Add Employee</button>
+                </div>
+                <div id="employees-list" class="cards-grid"></div>
+            </section>
+
+            <!-- Testimonials View -->
+            <section id="view-testimonials" class="view-section">
+                <div class="page-header">
+                    <h1>Testimonials</h1>
+                    <button id="add-testimonial-btn" class="btn btn-primary admin-only hidden"><i class="fa-solid fa-plus"></i> Add Testimonial</button>
+                </div>
+                <div id="testimonials-list" class="cards-grid"></div>
+            </section>
+
+            <!-- News View -->
+            <section id="view-news" class="view-section">
+                <div class="page-header">
+                    <h1>News & Blog Posts</h1>
+                    <button id="add-news-btn" class="btn btn-primary admin-only hidden"><i class="fa-solid fa-plus"></i> Add News Post</button>
+                </div>
+                <div id="news-list" class="cards-grid"></div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Edit/Add Modal -->
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal-btn">&times;</button>
+            <h2 id="modal-title">Edit Item</h2>
+            <form id="edit-form">
+                <input type="hidden" id="edit-id">
+                <input type="hidden" id="edit-type">
+                <div id="modal-fields"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline close-modal-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Lead Modal -->
+    <div id="view-lead-modal" class="modal-overlay">
+        <div class="modal-content" style="width: 600px;">
+            <button class="close-modal-btn view-lead-close">&times;</button>
+            <h2>Submission Details</h2>
+            <div id="view-lead-content" class="modal-fields" style="max-height: 70vh; overflow-y: auto;"></div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-outline view-lead-close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Updated Script Path: from assets/js/admin.js to js/admin.js -->
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>

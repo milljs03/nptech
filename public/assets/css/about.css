@@ -1,0 +1,330 @@
+/* about.css - Styles specific to the About Us page */
+
+/* --- Page Header --- */
+.page-header {
+    background: linear-gradient(135deg, #0f172a 0%, #0663AF 100%);
+    color: white;
+    text-align: center;
+    padding: 80px 20px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 40px;
+    background: white;
+    clip-path: polygon(0 100%, 100% 100%, 100% 0); /* Angled cut at bottom */
+}
+
+/* 125th Anniversary Styles */
+.anniversary-wrapper {
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+}
+
+.anniversary-number {
+    font-size: 6rem;
+    font-weight: 800;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.8);
+    background: linear-gradient(180deg, #ffffff 30%, var(--npt-lt-blue) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+    font-family: var(--font-heading);
+}
+
+.anniversary-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 700;
+    color: var(--npt-lt-blue);
+    margin-top: -10px;
+}
+
+.header-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-family: var(--font-heading);
+    color: white; /* Explicitly set to white to override global h1 color */
+}
+
+.header-subtitle {
+    font-size: 1.15rem;
+    max-width: 700px;
+    margin: 0 auto;
+    color: #cbd5e1;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+/* --- Story Section --- */
+.story-section {
+    padding: 80px 20px;
+    background-color: white;
+}
+
+.story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.story-content {
+    order: 1; /* Text first on desktop */
+}
+
+.section-label {
+    display: inline-block;
+    color: var(--npt-blue);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+}
+
+.story-content h2 {
+    font-size: 2.25rem;
+    margin-bottom: 25px;
+    color: var(--npt-black);
+    line-height: 1.2;
+}
+
+.story-content p {
+    font-size: 1.05rem;
+    color: var(--npt-gray);
+    margin-bottom: 20px;
+    line-height: 1.8;
+}
+
+.story-image-wrapper {
+    order: 2;
+    position: relative;
+}
+
+.story-img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.story-caption {
+    position: absolute;
+    bottom: 20px;
+    right: -20px;
+    background: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--npt-blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- Community Gallery --- */
+.community-section {
+    padding: 80px 20px;
+    background-color: #f8fafc;
+}
+
+.section-title-center {
+    text-align: center;
+    font-size: 2.25rem;
+    margin-bottom: 15px;
+    color: var(--npt-black);
+}
+
+.section-subtitle {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 50px;
+    color: var(--npt-gray);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    /* Masonry-style varying heights can be complex, keeping strict grid for now */
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 250px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+.gallery-overlay {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding: 20px;
+    color: white;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+}
+
+/* Make the first image span 2 cols */
+.gallery-item:first-child {
+    grid-column: span 2;
+}
+
+/* --- Values Section --- */
+.values-section {
+    padding: 80px 20px;
+    background-color: white;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.value-card {
+    text-align: center;
+    padding: 30px;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    transition: transform 0.3s;
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.value-icon {
+    font-size: 2.5rem;
+    color: var(--npt-blue);
+    margin-bottom: 20px;
+}
+
+.value-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    color: var(--npt-black);
+}
+
+.value-card p {
+    color: var(--npt-gray);
+    font-size: 0.95rem;
+}
+
+/* --- CTA Section --- */
+.cta-section {
+    background-color: var(--npt-blue);
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.cta-content h2 {
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.cta-content p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: rgba(255,255,255,0.9);
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn-white {
+    background-color: white;
+    color: var(--npt-blue);
+    padding: 12px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s;
+}
+
+.btn-white:hover {
+    background-color: #f1f5f9;
+    transform: translateY(-2px);
+}
+
+.btn-outline-white {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s;
+}
+
+.btn-outline-white:hover {
+    background-color: white;
+    color: var(--npt-blue);
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+    .anniversary-number {
+        font-size: 4rem;
+    }
+
+    .story-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .story-content {
+        order: 2;
+    }
+    
+    .story-image-wrapper {
+        order: 1;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr 1fr; /* 2 cols on mobile */
+    }
+
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .header-title {
+        font-size: 2.2rem;
+    }
+}
