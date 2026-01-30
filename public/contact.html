@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | NPTech</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/contact.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="index.html" class="logo-container">
+            <img src="assets/images/NPtech_logo.png" alt="NPTech" class="logo-img">
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="residential.html">Residential</a></li>
+            <li><a href="index.html#divisions">Divisions</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="careers.html">Careers</a></li>
+            <li><a href="contact.html" class="active">Contact</a></li>
+            
+            <!-- Bill Pay Dropdown -->
+            <li class="dropdown-container">
+                <a href="#" class="dropdown-toggle btn-nav-highlight">Pay Bill</a>
+                <ul class="dropdown-menu">
+                    <li><a href="https://nptel.smarthub.coop/Login.html" target="_blank"><i class="fa-solid fa-lock" style="margin-right:8px;"></i> Login</a></li>
+                    <li><a href="https://nptel.smarthub.coop/PayNow.html" target="_blank"><i class="fa-solid fa-bolt" style="margin-right:8px;"></i> Quick Pay</a></li>
+                </ul>
+            </li>
+        </ul>
+        <div class="mobile-menu-btn">☰</div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header fade-in-section">
+        <div class="header-content">
+            <h1 class="header-title">How Can We Help?</h1>
+            <p class="header-subtitle">We're here for you. Choose a topic below to get in touch with the right team.</p>
+        </div>
+    </header>
+
+    <!-- Topic Selection Section -->
+    <section class="topics-section fade-in-section">
+        <div class="container">
+            <div class="topics-grid">
+                <!-- Topic 1: Billing -->
+                <div class="topic-card" data-topic="billing">
+                    <div class="topic-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                    <h3 class="topic-title">Billing & Payments</h3>
+                    <p>Questions about your bill, payment options, or account status.</p>
+                </div>
+
+                <!-- Topic 2: Availability -->
+                <div class="topic-card" data-topic="availability">
+                    <div class="topic-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                    <h3 class="topic-title">Service Availability</h3>
+                    <p>Check if fiber is available at your address or request a site survey.</p>
+                </div>
+
+                <!-- Topic 3: Service/Support -->
+                <div class="topic-card" data-topic="service">
+                    <div class="topic-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                    <h3 class="topic-title">Tech Support</h3>
+                    <p>Issues with internet speed, connection drops, or equipment.</p>
+                </div>
+
+                <!-- Topic 4: Outage -->
+                <div class="topic-card" data-topic="outage">
+                    <div class="topic-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <h3 class="topic-title">Report an Outage</h3>
+                    <p>Let us know if your service is completely down.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dynamic Form Section -->
+    <section id="form-section" class="form-section hidden">
+        <div class="container">
+            <div class="form-wrapper fade-in-section">
+                <div class="form-container">
+                    <h2 id="form-title" class="section-title">Submit Request</h2>
+                    <form id="support-form">
+                        <input type="hidden" id="topic-input" name="topic">
+                        <!-- Honeypot for spam -->
+                        <input type="text" id="website-check" name="website_check" style="display:none;" autocomplete="off">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Full Name *</label>
+                                <input type="text" id="name" name="name" required placeholder="John Doe">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" required placeholder="john@example.com">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" required placeholder="(574) 555-0123">
+                            </div>
+                            <!-- Dynamic Field: Account Number (Billing) -->
+                            <div id="field-billing" class="form-group dynamic-field hidden">
+                                <label for="account-number">Account Number (Optional)</label>
+                                <input type="text" id="account-number" name="accountNumber" placeholder="Found on your bill">
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Field: Service Address (Availability/Outage) -->
+                        <div id="field-address" class="form-group dynamic-field hidden">
+                            <label for="address">Service Address *</label>
+                            <input type="text" id="address" name="address" placeholder="123 Main St, New Paris, IN">
+                        </div>
+
+                        <!-- Dynamic Field: Service Type (Support) -->
+                        <div id="field-service-type" class="form-group dynamic-field hidden">
+                            <label for="issue-type">What are you experiencing?</label>
+                            <select id="issue-type" name="issueType">
+                                <option value="slow_speed">Slow Speeds</option>
+                                <option value="no_connection">No Connection</option>
+                                <option value="wifi_issue">WiFi Issues</option>
+                                <option value="tv_issue">TV/Cable Issue</option>
+                                <option value="phone_issue">Phone Line Issue</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message / Details *</label>
+                            <textarea id="message" name="message" rows="5" required placeholder="Please describe your request..."></textarea>
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="btn-submit">Submit Request</button>
+                    </form>
+                </div>
+
+                <!-- Success Message -->
+                <div id="success-message" class="success-message hidden">
+                    <div class="success-icon"><i class="fa-solid fa-check-circle"></i></div>
+                    <h3>Request Received!</h3>
+                    <p>Thank you for contacting NPTech. Our team has received your request and will be in touch shortly.</p>
+                    <button class="btn-outline" onclick="location.reload()">Submit Another</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map/Info Section -->
+    <section class="info-section">
+        <div class="container">
+            <div class="info-grid">
+                <div class="info-card">
+                    <i class="fa-solid fa-phone"></i>
+                    <h3>Call Us</h3>
+                    <p><a href="tel:5748312176">(574) 831-2176</a></p>
+                    <span class="info-sub">Mon-Fri: 8am - 5pm</span>
+                </div>
+                <div class="info-card">
+                    <i class="fa-solid fa-envelope"></i>
+                    <h3>Email Us</h3>
+                    <p><a href="mailto:info@nptel.com">info@nptel.com</a></p>
+                    <span class="info-sub">We reply within 24 hours</span>
+                </div>
+                <div class="info-card">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <h3>Visit Us</h3>
+                    <p>19066 Co Rd 46<br>New Paris, IN 46553</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="contact.html">Contact Us</a>
+            </div>
+            <p>&copy; 2026 NPTech. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/contact.js"></script>
+</body>
+</html>

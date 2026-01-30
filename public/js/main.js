@@ -12,6 +12,8 @@ document.head.appendChild(favicon);
 // --- 0.1 Load Header ---
 loadHeader();
 
+let isRedirecting = false;
+
 // --- 1. Autocomplete Logic ---
 function initAutocomplete() {
     console.log("initAutocomplete started..."); 
@@ -36,7 +38,7 @@ function initAutocomplete() {
     const autocomplete = new google.maps.places.Autocomplete(input, {
         types: ['address'],
         componentRestrictions: { country: 'us' },
-        fields: ['address_components', 'geometry', 'icon', 'name']
+        fields: ['address_components', 'geometry', 'icon', 'name', 'formatted_address']
     });
 
     autocomplete.addListener('place_changed', () => {
@@ -46,16 +48,37 @@ function initAutocomplete() {
             return;
         }
 
-        if (redirectMsg) {
-            redirectMsg.classList.remove('hidden');
-            redirectMsg.innerText = `Checking availability for ${place.name}...`;
-        }
-
-        setTimeout(() => {
-            console.log("Address Selected:", place);
-            // window.location.href = `...`;
-        }, 1500);
+        const address = place.formatted_address || place.name;
+        redirectToApp(address);
     });
+}
+
+function redirectToApp(address) {
+    if (isRedirecting) return;
+    
+    const input = document.getElementById('cfn-address-input');
+    const msg = document.getElementById('redirect-message');
+
+    if(address && address.length > 5) {
+        isRedirecting = true;
+        
+        // Visual Feedback
+        if(input) {
+            input.style.borderColor = "#22c55e";
+            input.style.backgroundColor = "#f0fdf4";
+        }
+        if(msg) {
+            msg.classList.remove('hidden');
+            msg.innerText = "Checking availability...";
+        }
+        
+        // Redirect Logic
+        const targetUrl = 'https://fiber-service-query.web.app/query.html?auto=true&address=' + encodeURIComponent(address);
+        
+        setTimeout(() => {
+            window.location.href = targetUrl;
+        }, 800);
+    }
 }
 
 // Expose to window

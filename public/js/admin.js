@@ -156,6 +156,11 @@ async function loadDashboard() {
         const statHoods = document.getElementById('stat-hoods');
         if(statHoods) statHoods.textContent = hoodsSnap.size;
 
+        const viewsRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'analytics_pageviews');
+        const viewsSnap = await getDocs(viewsRef);
+        const statViews = document.getElementById('stat-views');
+        if(statViews) statViews.textContent = viewsSnap.size;
+
     } catch (err) {
         console.error("Dashboard Load Error:", err);
     }
