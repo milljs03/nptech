@@ -9,10 +9,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 120px 20px 80px;
+    padding: 120px 20px 160px; /* Increased bottom padding for angle */
     overflow: hidden;
     color: white;
     text-align: center;
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%); /* Modern angled edge */
 }
 
 /* Background Pattern */
@@ -112,14 +113,17 @@
 
 /* --- Divisions Section --- */
 .divisions-section {
-    padding: 100px 20px; /* Increased padding */
-    background-color: #f8fafc; /* Crisp light gray background */
+    padding: 40px 20px 100px; /* Reduced top padding to pull content up visually */
+    background-color: #f8fafc;
+    background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+    background-size: 40px 40px; /* Subtle tech grid pattern */
+    position: relative;
 }
 
 .section-title-center {
     text-align: center;
     font-size: 2.25rem;
-    margin-bottom: 60px;
+    margin-bottom: 15px;
     color: var(--npt-black);
     font-family: var(--font-heading);
     font-weight: 800;
@@ -137,6 +141,14 @@
     border-radius: 2px;
 }
 
+.section-subtitle {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 60px;
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
 .services-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -147,32 +159,34 @@
 
 .service-card {
     background: white;
-    border-radius: 16px; /* Softer corners */
+    border-radius: 16px;
     text-decoration: none;
     color: inherit;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid #e2e8f0; /* Subtle border */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     padding: 40px 32px;
     position: relative;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05); /* Soft, deep shadow */
     height: 100%; /* Force equal height in grid */
+    border-top: 4px solid transparent; /* Prepare for hover accent */
 }
 
 .service-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border-color: var(--npt-blue);
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px -12px rgba(6, 99, 175, 0.15); /* Blue-tinted shadow */
+    border-top-color: var(--npt-blue); /* Top accent reveal */
 }
 
 .service-icon {
-    height: 55px; /* Fixed height for alignment */
+    height: 60px;
     margin-bottom: 24px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    transition: transform 0.3s ease;
 }
 
 .service-icon img {
@@ -180,16 +194,13 @@
     max-width: 180px;
     object-fit: contain;
     object-position: left;
-    
-    /* Professional touch: Grayscale until hover */
-    filter: grayscale(100%);
-    opacity: 0.7;
-    transition: all 0.3s ease;
+    /* Removed grayscale for a more vibrant, modern look */
+    filter: none;
+    opacity: 1;
 }
 
 .service-card:hover .service-icon img {
-    filter: grayscale(0%);
-    opacity: 1;
+    transform: scale(1.05);
 }
 
 /* Wrapper to ensure content pushes button down */
@@ -224,7 +235,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: gap 0.2s ease;
+    transition: all 0.2s ease;
     margin-top: auto; /* Align to bottom of container */
 }
 

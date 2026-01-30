@@ -5,7 +5,7 @@
     background: linear-gradient(135deg, #0f172a 0%, #0663AF 100%);
     color: white;
     text-align: center;
-    padding: 100px 20px 80px;
+    padding: 80px 20px 80px;
     position: relative;
     overflow: hidden;
 }
@@ -19,10 +19,11 @@
 }
 
 .header-title {
-    font-size: 3rem;
-    font-weight: 800;
+    font-size: 2.5rem;
+    font-weight: 700;
     margin-bottom: 20px;
     font-family: var(--font-heading);
+    color: white;
 }
 
 .header-subtitle {

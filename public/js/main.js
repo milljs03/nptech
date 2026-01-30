@@ -1,4 +1,5 @@
 import { app, analytics } from './config/firebase-config.js';
+import { loadHeader } from './header.js';
 
 console.log("NPTech App Running");
 
@@ -7,6 +8,9 @@ const favicon = document.createElement('link');
 favicon.rel = 'shortcut icon';
 favicon.href = 'assets/images/NPtech_logo.png';
 document.head.appendChild(favicon);
+
+// --- 0.1 Load Header ---
+loadHeader();
 
 // --- 1. Autocomplete Logic ---
 function initAutocomplete() {
@@ -74,17 +78,6 @@ loadGoogleMapsScript();
 // --- 3. UI Interactions & Animations (CRITICAL FIX) ---
 document.addEventListener('DOMContentLoaded', () => {
     
-    // A. Mobile Menu
-    const mobileBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
-
-    if (mobileBtn && navLinks) {
-        mobileBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            mobileBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
-        });
-    }
-
     // B. Scroll Animations
     const observerOptions = {
         root: null,
