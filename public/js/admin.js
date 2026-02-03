@@ -121,7 +121,7 @@ document.querySelectorAll('.nav-item').forEach(btn => {
         if (tab === 'neighborhoods') loadNeighborhoods();
         if (tab === 'employees') loadEmployees();
         if (tab === 'testimonials') loadTestimonials();
-        if (tab === 'photos') loadCommunityPhotos(); // NEW
+        if (tab === 'photos') loadCommunityPhotos();
         if (tab === 'news') loadNews(); 
     });
 });
@@ -281,61 +281,45 @@ async function loadAlerts() {
     }
 }
 
-// --- PROMOTIONS ---
-const promotionsForm = document.getElementById('promotions-form');
-
+// --- PROMOTIONS (UPDATED) ---
 async function loadPromotions() {
+    const container = document.getElementById('promotions-list');
+    if (!container) return;
+    container.innerHTML = '<p>Loading promotions...</p>';
+
     try {
-        const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'site_content', 'promotions');
-        const docSnap = await getDoc(docRef);
-        
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            const titleEl = document.getElementById('promo-title');
-            if(titleEl) titleEl.value = data.title || '';
-            const descEl = document.getElementById('promo-description');
-            if(descEl) descEl.value = data.description || '';
-            const finePrintEl = document.getElementById('promo-finePrint');
-            if(finePrintEl) finePrintEl.value = data.finePrint || '';
-            
-            const itemsEl = document.getElementById('promo-items');
-            if (itemsEl && data.items && Array.isArray(data.items)) {
-                itemsEl.value = data.items.join('\n');
+        const ref = collection(db, 'artifacts', APP_ID, 'public', 'data', 'promotions');
+        const snapshot = await getDocs(ref);
+
+        container.innerHTML = '';
+        snapshot.forEach(doc => {
+            const promo = doc.data();
+            const card = document.createElement('div');
+            card.className = 'admin-card';
+            card.innerHTML = `
+                <h3>${promo.title}</h3>
+                <p>${promo.description ? promo.description.substring(0, 60) + '...' : ''}</p>
+                <div class="card-actions">
+                    ${isAdmin ? `<button class="btn-sm btn-outline btn-edit" data-id="${doc.id}" data-type="promotion">Edit</button>` : ''}
+                    ${isAdmin ? `<button class="btn-sm btn-delete" data-id="${doc.id}" data-type="promotion">Delete</button>` : ''}
+                </div>
+            `;
+            container.appendChild(card);
+
+            if(isAdmin) {
+                const editBtn = card.querySelector('.btn-edit');
+                if(editBtn) editBtn.addEventListener('click', () => openEditModal('promotion', doc.id, promo));
+                const delBtn = card.querySelector('.btn-delete');
+                if(delBtn) delBtn.addEventListener('click', () => deleteItem('promotions', doc.id, 'promotions'));
             }
-        }
+        });
+
+        if (snapshot.empty) container.innerHTML = '<p>No promotions found. Add one!</p>';
+
     } catch (err) {
         console.error("Error loading promotions:", err);
+        container.innerHTML = '<p style="color:red;">Error loading promotions.</p>';
     }
-}
-
-if(promotionsForm) {
-    promotionsForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!isAdmin) {
-            alert("You must be an admin to save changes.");
-            return;
-        }
-
-        const itemsText = document.getElementById('promo-items').value;
-        const itemsArray = itemsText.split('\n').map(item => item.trim()).filter(item => item !== '');
-
-        const data = {
-            title: document.getElementById('promo-title').value,
-            description: document.getElementById('promo-description').value,
-            items: itemsArray,
-            finePrint: document.getElementById('promo-finePrint').value,
-            updatedAt: new Date()
-        };
-
-        try {
-            const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'site_content', 'promotions');
-            await setDoc(docRef, data, { merge: true });
-            alert("Promotions content updated successfully!");
-        } catch (err) {
-            console.error(err);
-            alert("Error updating promotions content.");
-        }
-    });
 }
 
 // --- PLANS ---
@@ -579,7 +563,7 @@ async function loadTestimonials() {
     } catch (err) { console.error(err); }
 }
 
-// --- PHOTOS (NEW) ---
+// --- PHOTOS ---
 async function loadCommunityPhotos() {
     const container = document.getElementById('photos-list');
     if(!container) return;
@@ -675,6 +659,16 @@ function openEditModal(type, id, data = null) {
             <div><label class="form-label">Speed</label><input type="text" name="speed" class="form-control" value="${data?.speed || ''}" required></div>
             <div><label class="form-label">Description</label><textarea name="description" class="form-control" rows="3">${data?.description || ''}</textarea></div>
             <div style="margin-top:10px;"><input type="checkbox" name="isPopular" ${data?.isPopular ? 'checked' : ''}> <label class="form-label" style="display:inline;">Best Value (Highlight)</label></div>
+        `;
+    } else if (type === 'promotion') {
+        // NEW Promotion Fields
+        const items = data?.items ? data.items.join('\n') : '';
+        const terms = data?.terms ? data.terms.join('\n') : '';
+        modalFields.innerHTML = `
+            <div><label class="form-label">Title</label><input type="text" name="title" class="form-control" value="${data?.title || ''}" required placeholder="$5 OFF/mo for Educators"></div>
+            <div><label class="form-label">Short Description</label><textarea name="description" class="form-control" rows="2" placeholder="Switch today and get...">${data?.description || ''}</textarea></div>
+            <div><label class="form-label">Includes (One per line)</label><textarea name="items" class="form-control" rows="4" placeholder="$5 off every month&#10;Available on all plans">${items}</textarea></div>
+            <div><label class="form-label">Terms / Fine Print (One per line)</label><textarea name="terms" class="form-control" rows="3" placeholder="Available to new customers&#10;Must show ID">${terms}</textarea></div>
         `;
     } else if (type === 'job') {
         modalFields.innerHTML = `
@@ -791,16 +785,22 @@ if(editForm) {
             const activeCheck = editForm.querySelector('[name="isActive"]');
             data.isActive = !!(activeCheck && activeCheck.checked);
         }
+        if (type === 'promotion') {
+            // Split textareas into arrays
+            if (data.items) data.items = data.items.split('\n').map(l => l.trim()).filter(l => l);
+            if (data.terms) data.terms = data.terms.split('\n').map(l => l.trim()).filter(l => l);
+        }
 
         let collectionName;
         if (type === 'plan') collectionName = 'plans';
         else if (type === 'job') collectionName = 'jobs'; 
         else if (type === 'alert') collectionName = 'alerts';
+        else if (type === 'promotion') collectionName = 'promotions'; // NEW
         else if (type === 'hood') collectionName = 'neighborhoods';
         else if (type === 'testimonial') collectionName = 'testimonials';
         else if (type === 'employee') collectionName = 'employees';
         else if (type === 'install_step') collectionName = 'install_steps';
-        else if (type === 'photo') collectionName = 'community_photos'; // NEW
+        else if (type === 'photo') collectionName = 'community_photos';
         else if (type === 'news') collectionName = 'news';
 
         const collRef = collection(db, 'artifacts', APP_ID, 'public', 'data', collectionName);
@@ -818,11 +818,12 @@ if(editForm) {
             if (type === 'plan') loadPlans();
             if (type === 'job') loadJobs(); 
             if (type === 'alert') loadAlerts(); 
+            if (type === 'promotion') loadPromotions(); // NEW
             if (type === 'hood') loadNeighborhoods();
             if (type === 'testimonial') loadTestimonials();
             if (type === 'employee') loadEmployees();
             if (type === 'install_step') loadInstallSteps();
-            if (type === 'photo') loadCommunityPhotos(); // NEW
+            if (type === 'photo') loadCommunityPhotos();
             if (type === 'news') loadNews();
             
         } catch (err) {
@@ -841,11 +842,12 @@ async function deleteItem(collectionName, id, refreshType) {
         if (refreshType === 'plan') loadPlans();
         if (refreshType === 'job') loadJobs();
         if (refreshType === 'alert') loadAlerts();
+        if (refreshType === 'promotions') loadPromotions(); // NEW
         if (refreshType === 'neighborhoods') loadNeighborhoods();
         if (refreshType === 'testimonials') loadTestimonials();
         if (refreshType === 'employees') loadEmployees();
         if (refreshType === 'install') loadInstallSteps();
-        if (refreshType === 'photos') loadCommunityPhotos(); // NEW
+        if (refreshType === 'photos') loadCommunityPhotos();
         if (refreshType === 'news') loadNews();
     } catch (err) {
         console.error("Delete failed", err);
@@ -863,6 +865,9 @@ if(addJobBtn) addJobBtn.addEventListener('click', () => openEditModal('job'));
 const addAlertBtn = document.getElementById('add-alert-btn'); 
 if(addAlertBtn) addAlertBtn.addEventListener('click', () => openEditModal('alert'));
 
+const addPromoBtn = document.getElementById('add-promo-btn'); // NEW
+if(addPromoBtn) addPromoBtn.addEventListener('click', () => openEditModal('promotion'));
+
 const addHoodBtn = document.getElementById('add-hood-btn');
 if(addHoodBtn) addHoodBtn.addEventListener('click', () => openEditModal('hood'));
 
@@ -875,7 +880,7 @@ if(addTestBtn) addTestBtn.addEventListener('click', () => openEditModal('testimo
 const addEmpBtn = document.getElementById('add-employee-btn');
 if(addEmpBtn) addEmpBtn.addEventListener('click', () => openEditModal('employee'));
 
-const addPhotoBtn = document.getElementById('add-photo-btn'); // NEW
+const addPhotoBtn = document.getElementById('add-photo-btn');
 if(addPhotoBtn) addPhotoBtn.addEventListener('click', () => openEditModal('photo'));
 
 const addNewsBtn = document.getElementById('add-news-btn');
@@ -890,7 +895,7 @@ function openViewLeadModal(lead) {
 
     let html = '<div class="detail-grid">';
     
-    const priority = ['type', 'status', 'submittedAt', 'name', 'businessName', 'company', 'contactName', 'email', 'phone', 'address', 'message', 'details'];
+    const priority = ['type', 'status', 'submittedAt', 'name', 'businessName', 'company', 'contactName', 'email', 'phone', 'address', 'accountNumber', 'issueType', 'message', 'details'];
     
     const formatVal = (key, val) => {
         if (key === 'submittedAt' && val && val.toDate) return val.toDate().toLocaleString();

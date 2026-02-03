@@ -71,7 +71,6 @@
                 <button class="nav-item" data-tab="testimonials">
                     <i class="fa-solid fa-comment-dots"></i> Testimonials
                 </button>
-                <!-- NEW Photos Tab -->
                 <button class="nav-item" data-tab="photos">
                     <i class="fa-solid fa-images"></i> Community Photos
                 </button>
@@ -130,36 +129,14 @@
                 <div id="alerts-list" class="cards-grid"></div>
             </section>
 
-            <!-- Promotions View -->
+            <!-- Promotions View (UPDATED) -->
             <section id="view-promotions" class="view-section">
                 <div class="page-header">
-                    <h1>Save More / Promotions</h1>
-                    <p>Manage the dynamic content for the "Save More" section on the residential page.</p>
+                    <h1>Active Promotions</h1>
+                    <button id="add-promo-btn" class="btn btn-primary admin-only hidden"><i class="fa-solid fa-plus"></i> Add Promotion</button>
                 </div>
-                <div class="admin-card" style="max-width: 800px;">
-                    <form id="promotions-form">
-                        <div style="margin-bottom: 20px;">
-                            <label class="form-label">Section Title</label>
-                            <input type="text" id="promo-title" name="title" class="form-control" placeholder="e.g. Save More" required>
-                        </div>
-                        <div style="margin-bottom: 20px;">
-                            <label class="form-label">Description</label>
-                            <textarea id="promo-description" name="description" class="form-control" rows="3" placeholder="e.g. We're committed to our community..."></textarea>
-                        </div>
-                        <div style="margin-bottom: 20px;">
-                            <label class="form-label">Discounts / Offers (One per line)</label>
-                            <textarea id="promo-items" name="items" class="form-control" rows="5" placeholder="$5/mo if you sign up for autopay&#10;$5/mo discount for teachers*"></textarea>
-                            <small style="color: #64748b;">Enter each bullet point on a new line.</small>
-                        </div>
-                        <div style="margin-bottom: 20px;">
-                            <label class="form-label">Fine Print</label>
-                            <input type="text" id="promo-finePrint" name="finePrint" class="form-control" placeholder="e.g. *Teacher discount requires valid school ID.">
-                        </div>
-                        <div style="display:flex; justify-content: flex-end;">
-                            <button type="submit" class="btn btn-primary">Save Content</button>
-                        </div>
-                    </form>
-                </div>
+                <p style="margin-bottom: 20px; color: #64748b;">Manage the "Ways to Save" offers on the residential page.</p>
+                <div id="promotions-list" class="cards-grid"></div>
             </section>
 
             <!-- Leads View -->
@@ -171,7 +148,8 @@
                             <option value="all">All Forms</option>
                             <option value="quote">Business Quotes</option>
                             <option value="builder">Builder Inquiries</option>
-                            <option value="support">Support Tickets</option>
+                            <option value="support_ticket">Support Tickets</option>
+                            <option value="contact">Contact Messages</option>
                         </select>
                     </div>
                 </div>
@@ -251,13 +229,13 @@
                 <div id="testimonials-list" class="cards-grid"></div>
             </section>
 
-            <!-- NEW Photos View -->
+            <!-- Photos View -->
             <section id="view-photos" class="view-section">
                 <div class="page-header">
                     <h1>Community Gallery Photos</h1>
                     <button id="add-photo-btn" class="btn btn-primary admin-only hidden"><i class="fa-solid fa-plus"></i> Add Photo</button>
                 </div>
-                <p style="margin-bottom: 20px; color: #64748b;">Manage the images displayed in the "Community at Our Core" grid on the About page. Note: The first image in the list will span 2 columns.</p>
+                <p style="margin-bottom: 20px; color: #64748b;">Manage the images displayed in the "Community at Our Core" grid on the About page.</p>
                 <div id="photos-list" class="cards-grid"></div>
             </section>
 

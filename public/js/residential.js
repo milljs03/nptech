@@ -3,6 +3,8 @@ import { db, app } from './config/firebase-config.js';
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { collection, getDocs, query, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+const APP_ID = '162296779236';
+
 document.addEventListener('DOMContentLoaded', async () => {
     
     // --- 1. Auth & Init ---
@@ -17,9 +19,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(plansGrid) {
         try {
             // Using specific appId path '162296779236' to match Admin saves
-            const appId = '162296779236'; 
-            const plansRef = collection(db, 'artifacts', appId, 'public', 'data', 'plans');
-            console.log(`Fetching plans from: artifacts/${appId}/public/data/plans`);
+            const plansRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'plans');
+            console.log(`Fetching plans from: artifacts/${APP_ID}/public/data/plans`);
             
             const snapshot = await getDocs(plansRef);
             
@@ -224,35 +225,61 @@ function updateTimelineView(index, steps) {
     });
 }
 
-// --- Helper: Load Promotions ---
+// --- Helper: Load Promotions (UPDATED) ---
 async function loadPromotions() {
-    const section = document.getElementById('promotions-section');
-    if (!section) return;
+    const promoGrid = document.getElementById('promotions-grid');
+    if (!promoGrid) return;
 
     try {
-        const appId = '162296779236';
-        const promoRef = doc(db, 'artifacts', appId, 'public', 'data', 'site_content', 'promotions');
-        const snapshot = await getDoc(promoRef);
+        // Fetch from 'promotions' collection instead of single doc
+        const ref = collection(db, 'artifacts', APP_ID, 'public', 'data', 'promotions');
+        const snapshot = await getDocs(ref);
 
-        if (snapshot.exists()) {
-            const data = snapshot.data();
-            
-            // Only show if there is a title or description
-            if (data.title || data.description) {
-                document.getElementById('promo-title').textContent = data.title || 'Special Offers';
-                document.getElementById('promo-desc').textContent = data.description || '';
-                document.getElementById('promo-fine-print').textContent = data.finePrint || '';
-
-                const listEl = document.getElementById('promo-items');
-                if (listEl && Array.isArray(data.items)) {
-                    listEl.innerHTML = data.items.map(item => `<li><i class="fa-solid fa-check-circle"></i> ${item}</li>`).join('');
-                }
-
-                section.classList.remove('hidden');
-            }
+        if (snapshot.empty) {
+            promoGrid.innerHTML = '<p class="text-center" style="grid-column:1/-1; color:#64748b;">No active promotions at this time.</p>';
+            return;
         }
-    } catch (error) {
-        console.error("Error loading promotions:", error);
+
+        promoGrid.innerHTML = '';
+        snapshot.forEach(doc => {
+            const promo = doc.data();
+            
+            // Build lists
+            let itemsHtml = '';
+            if (promo.items && Array.isArray(promo.items) && promo.items.length > 0) {
+                itemsHtml = `<ul class="promo-includes">
+                    ${promo.items.map(i => `<li><i class="fa-solid fa-check"></i> ${i}</li>`).join('')}
+                </ul>`;
+            }
+
+            let termsHtml = '';
+            if (promo.terms && Array.isArray(promo.terms) && promo.terms.length > 0) {
+                termsHtml = `<ul class="promo-terms">
+                    ${promo.terms.map(t => `<li>${t}</li>`).join('')}
+                </ul>`;
+            }
+
+            const card = document.createElement('div');
+            card.className = 'promo-card';
+            card.innerHTML = `
+                <div class="promo-header">
+                    <h3>${promo.title}</h3>
+                    <p>${promo.description || ''}</p>
+                </div>
+                <div class="promo-body">
+                    ${itemsHtml}
+                    ${itemsHtml && termsHtml ? '<div class="promo-divider"></div>' : ''}
+                    ${termsHtml ? '<div class="terms-label">Eligibility:</div>' + termsHtml : ''}
+                </div>
+                <div class="promo-footer">
+                    <a href="contact.html" class="promo-btn">Check Eligibility</a>
+                </div>
+            `;
+            promoGrid.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error("Error loading promotions:", err);
     }
 }
 
@@ -262,22 +289,19 @@ async function loadTestimonials() {
     if (!tGrid) return;
 
     try {
-        const appId = '162296779236';
-        const ref = collection(db, 'artifacts', appId, 'public', 'data', 'testimonials');
+        const ref = collection(db, 'artifacts', APP_ID, 'public', 'data', 'testimonials');
         const snapshot = await getDocs(ref);
 
         if (snapshot.empty) {
             // Fallback to defaults if DB is empty
             tGrid.innerHTML = `
                 <div class="testimonial-card">
-                    <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
                     <p class="quote-text">"Since switching to NPTech, my work-from-home connection has been flawless. The local support team is actually helpful, unlike the big cable companies."</p>
-                    <div class="quote-author"><strong>Sarah J.</strong><span>New Paris, IN</span></div>
+                    <div class="author">Sarah J., <span style="color:#64748b; font-size:0.9em;">New Paris, IN</span></div>
                 </div>
                 <div class="testimonial-card">
-                    <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
                     <p class="quote-text">"We have gamers and streamers in the house. The 1 Gig plan handles it all without a glitch. Highly recommend."</p>
-                    <div class="quote-author"><strong>Mike T.</strong><span>New Paris, IN</span></div>
+                    <div class="author">Mike T., <span style="color:#64748b; font-size:0.9em;">New Paris, IN</span></div>
                 </div>
             `;
             return;
@@ -288,9 +312,8 @@ async function loadTestimonials() {
             const t = doc.data();
             tGrid.innerHTML += `
                 <div class="testimonial-card">
-                    <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
                     <p class="quote-text">"${t.quote}"</p>
-                    <div class="quote-author"><strong>${t.author}</strong><span>${t.location || ''}</span></div>
+                    <div class="author">${t.author}, <span style="color:#64748b; font-size:0.9em;">${t.location || ''}</span></div>
                 </div>
             `;
         });
