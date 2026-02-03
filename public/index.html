@@ -39,60 +39,91 @@
         </div>
     </header>
 
-    <!-- Divisions Showcase Section -->
-    <section id="divisions" class="divisions-section fade-in-section">
-        <div class="container">
-            <h2 class="section-title-center">Our Divisions</h2>
-            <p class="section-subtitle">A family of companies dedicated to connecting, entertaining, and supporting our community.</p>
-            <div class="services-grid">
+    <!-- Divisions Showcase Section (Interactive Gallery) -->
+    <section id="divisions" class="divisions-section">
+        <div class="container-fluid" style="padding: 0 4%;">
+            <div class="fade-in-section text-center mb-5">
+                <h2 class="section-title-center">Our Divisions</h2>
+                <p class="section-subtitle">NPTech serves as the parent company for a diverse ecosystem of specialized divisions. <br class="mobile-hide">Hover over a division to explore our services.</p>
+            </div>
+            
+            <div class="expanding-gallery fade-in-section">
                 
-                <!-- 1. Community Fiber -->
-                <a href="https://communityfiber.net" target="_blank" rel="noopener noreferrer" class="service-card">
-                    <div class="service-icon">
-                        <img src="assets/images/cfn.png" alt="Community Fiber">
+                <!-- 1. Community Fiber (Green Accent) -->
+                <div class="gallery-card" style="--brand-color: #16a34a; --brand-dark: #0f4c25;">
+                    <div class="card-bg-pattern"><i class="fa-solid fa-wifi"></i></div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h3>Fiber Internet</h3>
+                        </div>
+                        <div class="card-details">
+                            <img src="assets/images/cfn.png" alt="Community Fiber" class="card-logo-overlay">
+                            <p>Delivering lightning-fast, symmetrical speeds to homes and businesses with a 100% fiber-optic network.</p>
+                            <ul class="mini-features">
+                                <li><i class="fa-solid fa-check"></i> Gigabit Speeds</li>
+                                <li><i class="fa-solid fa-check"></i> No Data Caps</li>
+                            </ul>
+                            <a href="https://communityfiber.net" target="_blank" class="gallery-btn">Visit Website <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
                     </div>
-                    <div class="service-content">
-                        <h3>Community Fiber</h3>
-                        <p>Fast, reliable fiber internet serving communities throughout the region.</p>
-                        <span class="service-link">Visit Website <i class="fa-solid fa-arrow-right-long"></i></span>
-                    </div>
-                </a>
+                </div>
 
-                <!-- 2. Quality Cablevision -->
-                <a href="https://qualitycablevision.com/" target="_blank" rel="noopener noreferrer" class="service-card">
-                    <div class="service-icon">
-                        <img src="assets/images/qc.png" alt="Quality Cablevision">
+                <!-- 2. Quality Cablevision (Red Accent) -->
+                <div class="gallery-card" style="--brand-color: #dc2626; --brand-dark: #7f1d1d;">
+                    <div class="card-bg-pattern"><i class="fa-solid fa-tv"></i></div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h3>Cable TV</h3>
+                        </div>
+                        <div class="card-details">
+                            <img src="assets/images/qc.png" alt="Quality Cablevision" class="card-logo-overlay">
+                            <p>Reliable cable TV and coax internet packages. Enjoy your favorite sports and shows at an affordable price.</p>
+                            <ul class="mini-features">
+                                <li><i class="fa-solid fa-check"></i> HD Channels</li>
+                                <li><i class="fa-solid fa-check"></i> Bundle Savings</li>
+                            </ul>
+                            <a href="https://qualitycablevision.com/" target="_blank" class="gallery-btn">Visit Website <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
                     </div>
-                    <div class="service-content">
-                        <h3>Quality Cablevision</h3>
-                        <p>Premium Cable TV and Internet services for your home entertainment needs.</p>
-                        <span class="service-link">Visit Website <i class="fa-solid fa-arrow-right-long"></i></span>
-                    </div>
-                </a>
+                </div>
 
-                <!-- 3. Simplify Tech -->
-                <a href="https://wesimplify.tech/" target="_blank" rel="noopener noreferrer" class="service-card">
-                    <div class="service-icon">
-                        <img src="assets/images/simplify.png" alt="Simplify Tech">
+                <!-- 3. Simplify Tech (Lime Accent) -->
+                <div class="gallery-card" style="--brand-color: #84cc16; --brand-dark: #3f6212;">
+                    <div class="card-bg-pattern"><i class="fa-solid fa-microchip"></i></div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h3>Managed IT</h3>
+                        </div>
+                        <div class="card-details">
+                            <img src="assets/images/simplify.png" alt="Simplify Tech" class="card-logo-overlay">
+                            <p>Your personal IT department. Virus removal, computer repair, and fully managed cybersecurity services.</p>
+                            <ul class="mini-features">
+                                <li><i class="fa-solid fa-check"></i> PC Repair</li>
+                                <li><i class="fa-solid fa-check"></i> MSP Services</li>
+                            </ul>
+                            <a href="https://wesimplify.tech/" target="_blank" class="gallery-btn">Visit Website <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
                     </div>
-                    <div class="service-content">
-                        <h3>Simplify Tech</h3>
-                        <p>Expert computer repair, managed IT services, and technical support.</p>
-                        <span class="service-link">Visit Website <i class="fa-solid fa-arrow-right-long"></i></span>
-                    </div>
-                </a>
+                </div>
 
-                <!-- 4. APG -->
-                <a href="https://advancedproductsgroup.net/" target="_blank" rel="noopener noreferrer" class="service-card">
-                    <div class="service-icon">
-                        <img src="assets/images/apg.png" alt="Advanced Products Group">
+                <!-- 4. APG (Dark Green Accent) -->
+                <div class="gallery-card" style="--brand-color: #4d7c0f; --brand-dark: #1a2e05;">
+                    <div class="card-bg-pattern"><i class="fa-solid fa-network-wired"></i></div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h3>Enterprise</h3>
+                        </div>
+                        <div class="card-details">
+                            <img src="assets/images/apg.png" alt="APG" class="card-logo-overlay">
+                            <p>The physical layer of your business. Structured cabling, fiber splicing, and advanced VoIP phone systems.</p>
+                            <ul class="mini-features">
+                                <li><i class="fa-solid fa-check"></i> Structured Cabling</li>
+                                <li><i class="fa-solid fa-check"></i> Business VoIP</li>
+                            </ul>
+                            <a href="https://advancedproductsgroup.net/" target="_blank" class="gallery-btn">Visit Website <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
                     </div>
-                    <div class="service-content">
-                        <h3>Advanced Products Group</h3>
-                        <p>Business phone systems, structured wiring, and enterprise communication solutions.</p>
-                        <span class="service-link">Visit Website <i class="fa-solid fa-arrow-right-long"></i></span>
-                    </div>
-                </a>
+                </div>
 
             </div>
         </div>
@@ -102,9 +133,9 @@
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Contact Us</a>
+                <a href="https://communityfiber-net.web.app/footer/privacy-policy.html">Privacy Policy</a>
+                <a href="https://communityfiber-net.web.app/footer/terms-of-service.html">Terms of Service</a>
+                <a href="contact.html">Contact Us</a>
             </div>
             <p>&copy; 2026 NPTech. All rights reserved.</p>
         </div>

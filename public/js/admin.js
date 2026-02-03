@@ -113,9 +113,10 @@ document.querySelectorAll('.nav-item').forEach(btn => {
 
         // Lazy load data when tab is clicked
         if (tab === 'leads') loadLeads();
+        if (tab === 'alerts') loadAlerts(); // NEW
         if (tab === 'promotions') loadPromotions();
         if (tab === 'plans') loadPlans();
-        if (tab === 'jobs') loadJobs(); // NEW
+        if (tab === 'jobs') loadJobs(); 
         if (tab === 'install') loadInstallSteps(); 
         if (tab === 'neighborhoods') loadNeighborhoods();
         if (tab === 'employees') loadEmployees();
@@ -224,6 +225,59 @@ async function loadLeads() {
 const leadFilterEl = document.getElementById('lead-filter');
 if(leadFilterEl) {
     leadFilterEl.addEventListener('change', loadLeads);
+}
+
+// --- ALERTS ---
+async function loadAlerts() {
+    const container = document.getElementById('alerts-list');
+    if(!container) return;
+    container.innerHTML = '<p>Loading...</p>';
+    
+    try {
+        const ref = collection(db, 'artifacts', APP_ID, 'public', 'data', 'alerts');
+        const snapshot = await getDocs(ref);
+        
+        container.innerHTML = '';
+        snapshot.forEach(doc => {
+            const alert = doc.data();
+            const card = document.createElement('div');
+            card.className = 'admin-card';
+            
+            // Determine badge color based on alert type
+            let badgeClass = 'bg-blue';
+            if (alert.type === 'warning') badgeClass = 'bg-yellow';
+            if (alert.type === 'danger') badgeClass = 'bg-red';
+
+            const statusBadge = alert.isActive ? '<span class="badge bg-green">Active</span>' : '<span class="badge bg-gray">Inactive</span>';
+
+            card.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span class="badge ${badgeClass}">${alert.type || 'Info'}</span>
+                    ${statusBadge}
+                </div>
+                <h3>${alert.title}</h3>
+                <p>${alert.message}</p>
+                <div class="card-actions">
+                    ${isAdmin ? `<button class="btn-sm btn-outline btn-edit" data-id="${doc.id}" data-type="alert">Edit</button>` : ''}
+                    ${isAdmin ? `<button class="btn-sm btn-delete" data-id="${doc.id}" data-type="alert">Delete</button>` : ''}
+                </div>
+            `;
+            container.appendChild(card);
+            
+            if(isAdmin) {
+                const editBtn = card.querySelector('.btn-edit');
+                if(editBtn) editBtn.addEventListener('click', () => openEditModal('alert', doc.id, alert));
+                const delBtn = card.querySelector('.btn-delete');
+                if(delBtn) delBtn.addEventListener('click', () => deleteItem('alerts', doc.id, 'alert'));
+            }
+        });
+
+        if (snapshot.empty) container.innerHTML = '<p>No active alerts.</p>';
+
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p style="color:red;">Error loading alerts.</p>';
+    }
 }
 
 // --- PROMOTIONS ---
@@ -584,7 +638,6 @@ function openEditModal(type, id, data = null) {
             <div style="margin-top:10px;"><input type="checkbox" name="isPopular" ${data?.isPopular ? 'checked' : ''}> <label class="form-label" style="display:inline;">Best Value (Highlight)</label></div>
         `;
     } else if (type === 'job') {
-        // NEW Job Fields
         modalFields.innerHTML = `
             <div><label class="form-label">Job Title</label><input type="text" name="title" class="form-control" value="${data?.title || ''}" required></div>
             <div><label class="form-label">Location</label><input type="text" name="location" class="form-control" value="${data?.location || 'New Paris, IN'}" required></div>
@@ -598,6 +651,20 @@ function openEditModal(type, id, data = null) {
             <div><label class="form-label">Short Description</label><textarea name="description" class="form-control" rows="3" required>${data?.description || ''}</textarea></div>
             <div><label class="form-label">Indeed URL (Optional)</label><input type="url" name="indeedUrl" class="form-control" value="${data?.indeedUrl || ''}" placeholder="https://indeed.com/..."></div>
             <div style="margin-top:10px;"><input type="checkbox" name="isActive" ${data?.isActive !== false ? 'checked' : ''}> <label class="form-label" style="display:inline;">Active Posting</label></div>
+        `;
+    } else if (type === 'alert') {
+        // NEW Alert Fields
+        modalFields.innerHTML = `
+            <div><label class="form-label">Alert Title</label><input type="text" name="title" class="form-control" value="${data?.title || ''}" required placeholder="e.g. Service Outage"></div>
+            <div><label class="form-label">Message</label><textarea name="message" class="form-control" rows="3" required placeholder="Details about the alert...">${data?.message || ''}</textarea></div>
+            <div><label class="form-label">Type</label>
+                <select name="type" class="form-control">
+                    <option value="info" ${data?.type === 'info' ? 'selected' : ''}>Info (Blue)</option>
+                    <option value="warning" ${data?.type === 'warning' ? 'selected' : ''}>Warning (Amber)</option>
+                    <option value="danger" ${data?.type === 'danger' ? 'selected' : ''}>Outage/Danger (Red)</option>
+                </select>
+            </div>
+            <div style="margin-top:10px;"><input type="checkbox" name="isActive" ${data?.isActive ? 'checked' : ''}> <label class="form-label" style="display:inline;">Active (Visible on Site)</label></div>
         `;
     } else if (type === 'hood') {
          modalFields.innerHTML = `
@@ -677,10 +744,15 @@ if(editForm) {
             const activeCheck = editForm.querySelector('[name="isActive"]');
             data.isActive = !!(activeCheck && activeCheck.checked);
         }
+        if (type === 'alert') {
+            const activeCheck = editForm.querySelector('[name="isActive"]');
+            data.isActive = !!(activeCheck && activeCheck.checked);
+        }
 
         let collectionName;
         if (type === 'plan') collectionName = 'plans';
-        else if (type === 'job') collectionName = 'jobs'; // NEW
+        else if (type === 'job') collectionName = 'jobs'; 
+        else if (type === 'alert') collectionName = 'alerts'; // NEW
         else if (type === 'hood') collectionName = 'neighborhoods';
         else if (type === 'testimonial') collectionName = 'testimonials';
         else if (type === 'employee') collectionName = 'employees';
@@ -700,7 +772,8 @@ if(editForm) {
             
             // Refresh appropriate list
             if (type === 'plan') loadPlans();
-            if (type === 'job') loadJobs(); // NEW
+            if (type === 'job') loadJobs(); 
+            if (type === 'alert') loadAlerts(); // NEW
             if (type === 'hood') loadNeighborhoods();
             if (type === 'testimonial') loadTestimonials();
             if (type === 'employee') loadEmployees();
@@ -722,6 +795,7 @@ async function deleteItem(collectionName, id, refreshType) {
         await deleteDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', collectionName, id));
         if (refreshType === 'plan') loadPlans();
         if (refreshType === 'job') loadJobs();
+        if (refreshType === 'alert') loadAlerts();
         if (refreshType === 'neighborhoods') loadNeighborhoods();
         if (refreshType === 'testimonials') loadTestimonials();
         if (refreshType === 'employees') loadEmployees();
@@ -737,8 +811,11 @@ async function deleteItem(collectionName, id, refreshType) {
 const addPlanBtn = document.getElementById('add-plan-btn');
 if(addPlanBtn) addPlanBtn.addEventListener('click', () => openEditModal('plan'));
 
-const addJobBtn = document.getElementById('add-job-btn'); // NEW
+const addJobBtn = document.getElementById('add-job-btn'); 
 if(addJobBtn) addJobBtn.addEventListener('click', () => openEditModal('job'));
+
+const addAlertBtn = document.getElementById('add-alert-btn'); // NEW
+if(addAlertBtn) addAlertBtn.addEventListener('click', () => openEditModal('alert'));
 
 const addHoodBtn = document.getElementById('add-hood-btn');
 if(addHoodBtn) addHoodBtn.addEventListener('click', () => openEditModal('hood'));

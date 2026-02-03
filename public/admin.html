@@ -47,6 +47,9 @@
                 <button class="nav-item" data-tab="leads">
                     <i class="fa-solid fa-inbox"></i> Leads & Forms
                 </button>
+                <button class="nav-item" data-tab="alerts">
+                    <i class="fa-solid fa-bell"></i> Service Alerts
+                </button>
                 <button class="nav-item" data-tab="promotions">
                     <i class="fa-solid fa-percent"></i> Promotions
                 </button>
@@ -112,6 +115,16 @@
                         <p class="stat-value" id="stat-views">0</p>
                     </div>
                 </div>
+            </section>
+
+            <!-- Alerts View -->
+            <section id="view-alerts" class="view-section">
+                <div class="page-header">
+                    <h1>Service Alerts & Notifications</h1>
+                    <button id="add-alert-btn" class="btn btn-primary admin-only hidden"><i class="fa-solid fa-plus"></i> Create Alert</button>
+                </div>
+                <p style="margin-bottom: 20px; color: #64748b;">Manage global banners shown at the top of the website (e.g., Outages, Maintenance, Holidays).</p>
+                <div id="alerts-list" class="cards-grid"></div>
             </section>
 
             <!-- Promotions View -->

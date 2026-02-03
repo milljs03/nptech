@@ -1,5 +1,6 @@
-import { app, analytics } from './config/firebase-config.js';
+import { app, analytics, db } from './config/firebase-config.js';
 import { loadHeader } from './header.js';
+import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 console.log("NPTech App Running");
 
@@ -13,6 +14,52 @@ document.head.appendChild(favicon);
 loadHeader();
 
 let isRedirecting = false;
+
+// --- 0.2 Check for Global Alerts (NEW) ---
+async function checkGlobalAlerts() {
+    // Only fetch if not already in session storage (basic caching)
+    // We remove this check if you want real-time updates on refresh, keeping it for performance
+    // For "Outages", removing cache is safer to ensure users see the latest status.
+    
+    try {
+        const appId = '162296779236'; 
+        const alertsRef = collection(db, 'artifacts', appId, 'public', 'data', 'alerts');
+        const q = query(alertsRef, where('isActive', '==', true));
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                createAlertBanner(doc.data());
+            });
+        }
+    } catch (err) {
+        console.warn("Error fetching alerts:", err);
+    }
+}
+
+function createAlertBanner(alert) {
+    // Prevent duplicates
+    if (document.querySelector(`.global-alert-banner[data-title="${alert.title}"]`)) return;
+
+    const banner = document.createElement('div');
+    const typeClass = `alert-${alert.type || 'info'}`;
+    
+    banner.className = `global-alert-banner ${typeClass}`;
+    banner.dataset.title = alert.title; // marker to prevent dupes
+    
+    // Icon based on type
+    let icon = '<i class="fa-solid fa-circle-info"></i>';
+    if (alert.type === 'warning') icon = '<i class="fa-solid fa-triangle-exclamation"></i>';
+    if (alert.type === 'danger') icon = '<i class="fa-solid fa-circle-exclamation"></i>';
+
+    banner.innerHTML = `
+        <span>${icon} <strong>${alert.title}:</strong> ${alert.message}</span>
+        <button class="alert-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
+    `;
+
+    // Insert at the very top of body
+    document.body.insertAdjacentElement('afterbegin', banner);
+}
 
 // --- 1. Autocomplete Logic ---
 function initAutocomplete() {
@@ -101,6 +148,9 @@ loadGoogleMapsScript();
 // --- 3. UI Interactions & Animations (CRITICAL FIX) ---
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Check for alerts immediately on DOM ready
+    checkGlobalAlerts();
+
     // B. Scroll Animations
     const observerOptions = {
         root: null,
