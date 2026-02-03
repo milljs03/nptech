@@ -113,7 +113,7 @@ document.querySelectorAll('.nav-item').forEach(btn => {
 
         // Lazy load data when tab is clicked
         if (tab === 'leads') loadLeads();
-        if (tab === 'alerts') loadAlerts(); // NEW
+        if (tab === 'alerts') loadAlerts(); 
         if (tab === 'promotions') loadPromotions();
         if (tab === 'plans') loadPlans();
         if (tab === 'jobs') loadJobs(); 
@@ -121,6 +121,7 @@ document.querySelectorAll('.nav-item').forEach(btn => {
         if (tab === 'neighborhoods') loadNeighborhoods();
         if (tab === 'employees') loadEmployees();
         if (tab === 'testimonials') loadTestimonials();
+        if (tab === 'photos') loadCommunityPhotos(); // NEW
         if (tab === 'news') loadNews(); 
     });
 });
@@ -412,7 +413,7 @@ async function loadJobs() {
                 const editBtn = card.querySelector('.btn-edit');
                 if(editBtn) editBtn.addEventListener('click', () => openEditModal('job', doc.id, job));
                 const delBtn = card.querySelector('.btn-delete');
-                if(delBtn) delBtn.addEventListener('click', () => deleteItem('jobs', doc.id, 'job')); // refreshType 'job' -> calls loadJobs
+                if(delBtn) delBtn.addEventListener('click', () => deleteItem('jobs', doc.id, 'job')); 
             }
         });
 
@@ -578,6 +579,44 @@ async function loadTestimonials() {
     } catch (err) { console.error(err); }
 }
 
+// --- PHOTOS (NEW) ---
+async function loadCommunityPhotos() {
+    const container = document.getElementById('photos-list');
+    if(!container) return;
+    container.innerHTML = '<p>Loading...</p>';
+    
+    try {
+        const ref = collection(db, 'artifacts', APP_ID, 'public', 'data', 'community_photos');
+        const snapshot = await getDocs(ref);
+        
+        container.innerHTML = '';
+        snapshot.forEach(doc => {
+            const item = doc.data();
+            const card = document.createElement('div');
+            card.className = 'admin-card';
+            // Show thumbnail
+            card.innerHTML = `
+                <div style="width:100%; height:150px; background:#f1f5f9; margin-bottom:10px; border-radius:8px; overflow:hidden;">
+                    <img src="${item.imageUrl}" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <h3>${item.title}</h3>
+                <div class="card-actions">
+                    ${isAdmin ? `<button class="btn-sm btn-outline btn-edit">Edit</button>` : ''}
+                    ${isAdmin ? `<button class="btn-sm btn-delete">Delete</button>` : ''}
+                </div>
+            `;
+            container.appendChild(card);
+             if(isAdmin) {
+                const editBtn = card.querySelector('.btn-edit');
+                if(editBtn) editBtn.addEventListener('click', () => openEditModal('photo', doc.id, item));
+                const delBtn = card.querySelector('.btn-delete');
+                if(delBtn) delBtn.addEventListener('click', () => deleteItem('community_photos', doc.id, 'photos'));
+            }
+        });
+        if (snapshot.empty) container.innerHTML = '<p>No photos found. Add one!</p>';
+    } catch (err) { console.error(err); }
+}
+
 // --- NEWS ---
 async function loadNews() {
     const container = document.getElementById('news-list');
@@ -653,7 +692,6 @@ function openEditModal(type, id, data = null) {
             <div style="margin-top:10px;"><input type="checkbox" name="isActive" ${data?.isActive !== false ? 'checked' : ''}> <label class="form-label" style="display:inline;">Active Posting</label></div>
         `;
     } else if (type === 'alert') {
-        // NEW Alert Fields
         modalFields.innerHTML = `
             <div><label class="form-label">Alert Title</label><input type="text" name="title" class="form-control" value="${data?.title || ''}" required placeholder="e.g. Service Outage"></div>
             <div><label class="form-label">Message</label><textarea name="message" class="form-control" rows="3" required placeholder="Details about the alert...">${data?.message || ''}</textarea></div>
@@ -696,6 +734,11 @@ function openEditModal(type, id, data = null) {
             <div><label class="form-label">Title</label><input type="text" name="title" class="form-control" value="${data?.title || ''}" required></div>
             <div><label class="form-label">Years</label><input type="number" name="years" class="form-control" value="${data?.years || ''}" required></div>
             <div><label class="form-label">Fact</label><textarea name="fact" class="form-control" rows="2">${data?.fact || ''}</textarea></div>
+        `;
+    } else if (type === 'photo') {
+        modalFields.innerHTML = `
+            <div><label class="form-label">Overlay Title</label><input type="text" name="title" class="form-control" value="${data?.title || ''}" required placeholder="e.g. County Fair"></div>
+            <div><label class="form-label">Image URL</label><input type="url" name="imageUrl" class="form-control" value="${data?.imageUrl || ''}" required placeholder="https://..."></div>
         `;
     } else if (type === 'news') {
         const today = new Date().toISOString().split('T')[0];
@@ -752,11 +795,12 @@ if(editForm) {
         let collectionName;
         if (type === 'plan') collectionName = 'plans';
         else if (type === 'job') collectionName = 'jobs'; 
-        else if (type === 'alert') collectionName = 'alerts'; // NEW
+        else if (type === 'alert') collectionName = 'alerts';
         else if (type === 'hood') collectionName = 'neighborhoods';
         else if (type === 'testimonial') collectionName = 'testimonials';
         else if (type === 'employee') collectionName = 'employees';
         else if (type === 'install_step') collectionName = 'install_steps';
+        else if (type === 'photo') collectionName = 'community_photos'; // NEW
         else if (type === 'news') collectionName = 'news';
 
         const collRef = collection(db, 'artifacts', APP_ID, 'public', 'data', collectionName);
@@ -773,11 +817,12 @@ if(editForm) {
             // Refresh appropriate list
             if (type === 'plan') loadPlans();
             if (type === 'job') loadJobs(); 
-            if (type === 'alert') loadAlerts(); // NEW
+            if (type === 'alert') loadAlerts(); 
             if (type === 'hood') loadNeighborhoods();
             if (type === 'testimonial') loadTestimonials();
             if (type === 'employee') loadEmployees();
             if (type === 'install_step') loadInstallSteps();
+            if (type === 'photo') loadCommunityPhotos(); // NEW
             if (type === 'news') loadNews();
             
         } catch (err) {
@@ -800,6 +845,7 @@ async function deleteItem(collectionName, id, refreshType) {
         if (refreshType === 'testimonials') loadTestimonials();
         if (refreshType === 'employees') loadEmployees();
         if (refreshType === 'install') loadInstallSteps();
+        if (refreshType === 'photos') loadCommunityPhotos(); // NEW
         if (refreshType === 'news') loadNews();
     } catch (err) {
         console.error("Delete failed", err);
@@ -814,7 +860,7 @@ if(addPlanBtn) addPlanBtn.addEventListener('click', () => openEditModal('plan'))
 const addJobBtn = document.getElementById('add-job-btn'); 
 if(addJobBtn) addJobBtn.addEventListener('click', () => openEditModal('job'));
 
-const addAlertBtn = document.getElementById('add-alert-btn'); // NEW
+const addAlertBtn = document.getElementById('add-alert-btn'); 
 if(addAlertBtn) addAlertBtn.addEventListener('click', () => openEditModal('alert'));
 
 const addHoodBtn = document.getElementById('add-hood-btn');
@@ -828,6 +874,9 @@ if(addTestBtn) addTestBtn.addEventListener('click', () => openEditModal('testimo
 
 const addEmpBtn = document.getElementById('add-employee-btn');
 if(addEmpBtn) addEmpBtn.addEventListener('click', () => openEditModal('employee'));
+
+const addPhotoBtn = document.getElementById('add-photo-btn'); // NEW
+if(addPhotoBtn) addPhotoBtn.addEventListener('click', () => openEditModal('photo'));
 
 const addNewsBtn = document.getElementById('add-news-btn');
 if(addNewsBtn) addNewsBtn.addEventListener('click', () => openEditModal('news'));

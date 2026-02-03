@@ -8,7 +8,7 @@
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- CSS -->
@@ -17,101 +17,91 @@
 </head>
 <body>
 
-    <!-- Page Header -->
-    <header class="page-header">
-        <div class="header-content fade-in-section">
-            <!-- 125th Anniversary Focal Point -->
-            <div class="anniversary-wrapper">
-                <!-- Changed default from 0 to 125 for immediate fallback -->
-                <div class="anniversary-number" id="year-counter">125</div>
-                <div class="anniversary-label">Years of Service</div>
+    <!-- Header / Hero Section -->
+    <header class="page-header fade-in-section">
+        
+        <!-- 125th Anniversary Animated Badge -->
+        <div class="anniversary-container">
+            <svg class="drawn-ring" viewBox="0 0 220 220">
+                <!-- Two circles: one for background track, one for drawing -->
+                <circle class="ring-track" cx="110" cy="110" r="100" />
+                <circle class="ring-stroke" cx="110" cy="110" r="100" />
+            </svg>
+            <div class="anniversary-content">
+                <span class="number-text">125</span>
+                <span class="label-text">Years</span>
             </div>
-            
-            <h1 class="header-title">Celebrating a Legacy of Connection</h1>
-            <p class="header-subtitle">From a local telephone exchange to a regional technology leader, our mission remains the same: <strong>Keeping you connected.</strong></p>
         </div>
+
+        <h1 class="header-title">Connecting New Paris Since 1901</h1>
+        <p class="header-subtitle">From the first telephone lines to gigabit fiber, NPTech has been the heartbeat of communication in our community. We honor our past while building the future.</p>
     </header>
 
     <!-- Story Section -->
     <section class="story-section fade-in-section">
-        <div class="container">
-            <div class="story-grid">
-                <div class="story-content">
-                    <span class="section-label">Our History</span>
-                    <h2>125 Years of Innovation</h2>
-                    <p>For a century and a quarter, New Paris Telephone has been the heartbeat of communication for our area. But as technology evolved, so did we. Today, <strong>NPTech</strong> stands as the parent company for a diverse ecosystem of services—ranging from high-speed fiber internet and cable entertainment to enterprise IT solutions and structured wiring.</p>
-                    <p>While our name and capabilities have expanded, our core value hasn't changed: <em>Investing in Local Communities We Call Home.</em> We don't just serve these neighborhoods; we live in them, hire from them, and give back to them.</p>
-                </div>
-                <div class="story-image-wrapper">
-                    <!-- Using one of the uploaded images as a feature -->
-                    <img src="assets/images/team.webp" alt="NPTech History and Team" class="story-img">
-                    <div class="story-caption">
-                        <i class="fa-solid fa-clock-rotate-left"></i> Serving our neighbors since 1901.
-                    </div>
+        <div class="story-grid">
+            <div class="story-content">
+                <span class="section-label">Our History</span>
+                <h2>More Than Just a Utility Provider.</h2>
+                <p>New Paris Telephone was founded at the turn of the 20th century by local residents who understood that connection is essential for community growth. For 125 years, we have evolved alongside technology, moving from copper lines to coaxial cable, and now to a state-of-the-art Fiber-to-the-Home network.</p>
+                <p>Today, as NPTech, we serve thousands of residents and businesses across Northern Indiana. Our name has changed to reflect our expanded capabilities, but our mission remains the same: <strong>Local people serving local people.</strong></p>
+                <a href="contact.html" class="btn btn-primary" style="background:var(--npt-blue); color:white; padding:12px 24px; border-radius:50px; text-decoration:none; display:inline-block; margin-top:10px;">Get in Touch</a>
+            </div>
+            <div class="story-image-wrapper">
+                <!-- Using placeholder image for team history -->
+                <img src="assets/images/team.webp" alt="NPTech Team History" class="story-img">
+                <div class="story-caption">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Serving you since 1901</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Community Grid -->
+    <!-- Community Gallery Section -->
     <section class="community-section fade-in-section">
         <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="section-title-center">Community at Our Core</h2>
-                <p class="section-subtitle">We are proud to support local events, schools, and initiatives that make our region a better place to live and work.</p>
-            </div>
+            <h2 class="section-title-center">Community at Our Core</h2>
+            <p class="section-subtitle">We don't just work here; we live here. NPTech is proud to sponsor local events, support our schools, and fuel the businesses that make New Paris unique.</p>
             
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="assets/images/NPCream.JPG" alt="Community Event Ice Cream">
-                    <div class="gallery-overlay">
-                        <span>Community Events</span>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="assets/images/NP2.JPG" alt="Local Engagement">
-                </div>
-                <div class="gallery-item">
-                    <img src="assets/images/NP3.JPG" alt="Team at Work">
-                </div>
-                <div class="gallery-item">
-                    <img src="assets/images/NP4.JPG" alt="Supporting Local">
-                </div>
+            <div id="community-gallery-grid" class="gallery-grid">
+                <!-- Gallery items will be loaded dynamically from Admin Panel -->
             </div>
         </div>
     </section>
 
-    <!-- Core Values -->
+    <!-- Values Section -->
     <section class="values-section fade-in-section">
         <div class="container">
+            <h2 class="section-title-center">What We Stand For</h2>
             <div class="values-grid">
                 <div class="value-card">
-                    <div class="value-icon"><i class="fa-solid fa-handshake"></i></div>
-                    <h3>Integrity</h3>
-                    <p>We believe in honest, transparent pricing and doing what's right for the customer, every time.</p>
+                    <div class="value-icon"><i class="fa-solid fa-handshake-simple"></i></div>
+                    <h3>Integrity First</h3>
+                    <p>We believe in transparent pricing and honest communication. No hidden fees, no data caps, and no surprises on your bill.</p>
                 </div>
                 <div class="value-card">
-                    <div class="value-icon"><i class="fa-solid fa-lightbulb"></i></div>
-                    <h3>Innovation</h3>
-                    <p>Through Simplify Tech and Community Fiber, we bring cutting-edge technology to rural and suburban areas.</p>
+                    <div class="value-icon"><i class="fa-solid fa-rocket"></i></div>
+                    <h3>Future-Proof Tech</h3>
+                    <p>We invest heavily in our infrastructure to ensure New Paris stays ahead of the curve with world-class fiber technology.</p>
                 </div>
                 <div class="value-card">
                     <div class="value-icon"><i class="fa-solid fa-heart"></i></div>
-                    <h3>Service</h3>
-                    <p>Our support isn't in a distant call center. It's right here, provided by people who know your name.</p>
+                    <h3>Local Commitment</h3>
+                    <p>When you call us, you speak to a neighbor. We are dedicated to providing exceptional, personal service to our community.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="cta-content fade-in-section">
-            <h2>Ready to Connect?</h2>
-            <p>Whether you need home internet or business IT solutions, our divisions have you covered.</p>
+    <section class="cta-section fade-in-section">
+        <div class="cta-content">
+            <h2>Ready to Experience Better Internet?</h2>
+            <p>Join the thousands of neighbors who have made the switch to NPTech Fiber.</p>
             <div class="cta-buttons">
-                <a href="contact.html" class="btn-white">Contact Us</a>
-                <a href="index.html#divisions" class="btn-outline-white">Explore Services</a>
+                <a href="residential.html" class="btn-white">Check Availability</a>
+                <a href="contact.html" class="btn-outline-white">Contact Sales</a>
             </div>
         </div>
     </section>
@@ -130,8 +120,6 @@
 
     <!-- Scripts -->
     <script type="module" src="js/main.js"></script>
-    <!-- Animation script for the 125 counter -->
-    <script src="assets/js/about.js"></script>
-    <script type="module" src="js/traffic-logger.js"></script>
+    <script type="module" src="js/about.js"></script>
 </body>
 </html>

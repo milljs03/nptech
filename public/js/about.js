@@ -1,65 +1,57 @@
-// public/assets/js/about.js
+import { db, app } from './config/firebase-config.js';
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-function startAboutAnimation() {
-    // Select the counter element
-    const counterElement = document.getElementById('year-counter');
-    const targetYear = 125;
-    const duration = 2000; // Animation duration in milliseconds
+const APP_ID = '162296779236';
 
-    if (!counterElement) return;
+console.log("About JS Loaded");
 
-    // We specifically do NOT reset to 0 immediately here to prevent flickering 
-    // if the observer hasn't triggered yet. We rely on the animation to overwrite it.
+async function loadCommunityGallery() {
+    const galleryGrid = document.getElementById('community-gallery-grid');
+    if (!galleryGrid) return;
 
-    // Animation Logic
-    const animateCounter = () => {
-        // Only set to 0 right before animation starts
-        counterElement.innerText = '0'; 
+    try {
+        const ref = collection(db, 'artifacts', APP_ID, 'public', 'data', 'community_photos');
+        const snapshot = await getDocs(ref);
+
+        if (snapshot.empty) {
+            // Fallback content if no photos exist in DB yet
+            galleryGrid.innerHTML = `
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Community Event">
+                    <div class="gallery-overlay">County Fair Sponsorship</div>
+                </div>
+                <div class="gallery-item">
+                     <img src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="Fiber Installation">
+                    <div class="gallery-overlay">Fiber Expansion</div>
+                </div>
+            `;
+            return;
+        }
+
+        galleryGrid.innerHTML = '';
+        const photos = [];
+        snapshot.forEach(doc => {
+            photos.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Optional: sort by a timestamp if you add one, otherwise random or DB order
         
-        let startTime = null;
+        photos.forEach(photo => {
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.innerHTML = `
+                <img src="${photo.imageUrl}" alt="${photo.title || 'Community Photo'}">
+                <div class="gallery-overlay">${photo.title}</div>
+            `;
+            galleryGrid.appendChild(item);
+        });
 
-        const step = (timestamp) => {
-            if (!startTime) startTime = timestamp;
-            const progress = Math.min((timestamp - startTime) / duration, 1);
-            
-            // Easing function for smooth stop (easeOutExpo)
-            const easeOut = 1 - Math.pow(2, -10 * progress);
-            
-            const currentCount = Math.floor(easeOut * targetYear);
-            counterElement.innerText = currentCount;
-
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            } else {
-                counterElement.innerText = targetYear; // Ensure it ends exactly on 125
-            }
-        };
-
-        window.requestAnimationFrame(step);
-    };
-
-    // Use Intersection Observer to start animation when element is in view
-    if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounter();
-                    observer.unobserve(entry.target); // Run only once
-                }
-            });
-        }, { threshold: 0.1 }); // Trigger as soon as 10% is visible
-
-        observer.observe(counterElement);
-    } else {
-        // Fallback for browsers without IntersectionObserver
-        animateCounter();
+    } catch (err) {
+        console.error("Error loading gallery:", err);
+        galleryGrid.innerHTML = '<p style="text-align:center; width:100%; grid-column:span 4;">Unable to load photos.</p>';
     }
 }
 
-// Ensure DOM is ready before running
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startAboutAnimation);
-} else {
-    // If the script loads after DOMContentLoaded (common in previews), run immediately
-    startAboutAnimation();
-}
+document.addEventListener('DOMContentLoaded', () => {
+    loadCommunityGallery();
+});

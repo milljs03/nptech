@@ -5,59 +5,121 @@
     background: linear-gradient(135deg, #0f172a 0%, #0663AF 100%);
     color: white;
     text-align: center;
-    padding: 80px 20px 80px;
+    padding: 60px 20px 100px; /* Reduced top padding to accommodate badge */
     position: relative;
-    overflow: hidden;
+    /* overflow: hidden; Removed to ensure the white angled bottom fully covers the edge */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .page-header::after {
     content: "";
     position: absolute;
-    bottom: 0; left: 0; width: 100%; height: 40px;
+    bottom: -1px; /* Pull down slightly to cover any sub-pixel background bleed */
+    left: 0; 
+    width: 100%; 
+    height: 41px; /* Increased slightly to maintain shape with negative bottom */
     background: white;
     clip-path: polygon(0 100%, 100% 100%, 100% 0); /* Angled cut at bottom */
+    z-index: 1;
 }
 
-/* 125th Anniversary Styles */
-.anniversary-wrapper {
-    margin-bottom: 2rem;
+/* --- 125th Anniversary Drawn Animation --- */
+.anniversary-container {
     position: relative;
-    display: inline-block;
+    width: 220px;
+    height: 220px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.anniversary-number {
-    font-size: 6rem;
-    font-weight: 800;
-    line-height: 1;
-    color: transparent;
-    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.8);
-    background: linear-gradient(180deg, #ffffff 30%, var(--npt-lt-blue) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+.drawn-ring {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    transform: rotate(-90deg); /* Start drawing from top center */
+}
+
+.ring-track {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 6;
+}
+
+.ring-stroke {
+    fill: none;
+    stroke: var(--npt-lt-blue); /* Light Blue Draw Color */
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-dasharray: 630; /* Approx circumference of r=100 */
+    stroke-dashoffset: 630;
+    animation: drawCircle 2s ease-out forwards 0.5s; /* Delay start slightly */
+}
+
+.anniversary-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    text-align: center;
+}
+
+.number-text {
     font-family: var(--font-heading);
+    font-size: 5.5rem;
+    font-weight: 800;
+    line-height: 0.9;
+    color: white;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 1.2s; /* Pops in after circle starts */
 }
 
-.anniversary-label {
-    font-size: 1.2rem;
+.label-text {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
     text-transform: uppercase;
     letter-spacing: 4px;
     font-weight: 700;
-    color: var(--npt-lt-blue);
-    margin-top: -10px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 5px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeUp 0.6s ease-out forwards 1.8s;
 }
 
+/* Keyframes */
+@keyframes drawCircle {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes popIn {
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* Header Text Styles */
 .header-title {
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 3rem;
+    font-weight: 800;
     margin-bottom: 20px;
     font-family: var(--font-heading);
-    color: white; /* Explicitly set to white to override global h1 color */
+    color: white; 
+    line-height: 1.1;
+    max-width: 900px;
 }
 
 .header-subtitle {
-    font-size: 1.15rem;
-    max-width: 700px;
+    font-size: 1.25rem;
+    max-width: 800px;
     margin: 0 auto;
     color: #cbd5e1;
     font-weight: 400;
@@ -75,6 +137,8 @@
     grid-template-columns: 1fr 1fr;
     gap: 60px;
     align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .story-content {
@@ -115,6 +179,11 @@
     border-radius: 12px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     border: 1px solid #e2e8f0;
+    transition: transform 0.3s ease;
+}
+
+.story-image-wrapper:hover .story-img {
+    transform: scale(1.02);
 }
 
 .story-caption {
@@ -144,6 +213,8 @@
     font-size: 2.25rem;
     margin-bottom: 15px;
     color: var(--npt-black);
+    font-family: var(--font-heading);
+    font-weight: 700;
 }
 
 .section-subtitle {
@@ -157,7 +228,9 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    /* Masonry-style varying heights can be complex, keeping strict grid for now */
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 250px; /* Prevent collapse while loading */
 }
 
 .gallery-item {
@@ -166,6 +239,8 @@
     overflow: hidden;
     height: 250px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    cursor: pointer;
+    background-color: #e2e8f0; /* Placeholder color */
 }
 
 .gallery-item img {
@@ -176,7 +251,7 @@
 }
 
 .gallery-item:hover img {
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
 .gallery-overlay {
@@ -188,10 +263,12 @@
     font-weight: 600;
     opacity: 0;
     transition: opacity 0.3s;
+    transform: translateY(10px);
 }
 
 .gallery-item:hover .gallery-overlay {
     opacity: 1;
+    transform: translateY(0);
 }
 
 /* Make the first image span 2 cols */
@@ -199,60 +276,96 @@
     grid-column: span 2;
 }
 
-/* --- Values Section --- */
+/* --- Values Section (Professional Row Layout) --- */
 .values-section {
-    padding: 80px 20px;
+    padding: 100px 20px;
     background-color: white;
 }
 
 .values-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
+    gap: 50px; /* More breathing room */
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .value-card {
-    text-align: center;
-    padding: 30px;
-    border: 1px solid #f1f5f9;
-    border-radius: 12px;
-    transition: transform 0.3s;
+    /* Use grid to layout Icon | Content */
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 0 20px;
+    
+    padding: 20px;
+    text-align: left;
+    
+    /* Remove "Box" look */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    transition: transform 0.3s ease;
 }
 
 .value-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    transform: translateY(-5px); /* Subtle lift only */
 }
 
 .value-icon {
-    font-size: 2.5rem;
+    grid-row: 1 / span 2; /* Span both text rows */
+    align-self: start;
+    
+    width: 70px;
+    height: 70px;
+    font-size: 1.75rem;
     color: var(--npt-blue);
-    margin-bottom: 20px;
+    background: #f8fafc;
+    border-radius: 18px; /* Modern Squircle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.value-card:hover .value-icon {
+    background: var(--npt-blue);
+    color: white;
+    box-shadow: 0 10px 20px rgba(6, 99, 175, 0.2);
+    /* No flip, just color change */
 }
 
 .value-card h3 {
-    font-size: 1.25rem;
-    margin-bottom: 15px;
+    grid-column: 2;
+    align-self: end; /* Align to bottom of first row space */
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0 0 5px 0;
     color: var(--npt-black);
 }
 
 .value-card p {
-    color: var(--npt-gray);
-    font-size: 0.95rem;
+    grid-column: 2;
+    align-self: start;
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
 }
 
 /* --- CTA Section --- */
 .cta-section {
-    background-color: var(--npt-blue);
+    background: linear-gradient(135deg, var(--npt-blue) 0%, var(--npt-dark-blue) 100%);
     color: white;
     text-align: center;
-    padding: 80px 20px;
+    padding: 100px 20px;
 }
 
 .cta-content h2 {
     color: white;
     font-size: 2.5rem;
     margin-bottom: 20px;
+    font-family: var(--font-heading);
 }
 
 .cta-content p {
@@ -265,28 +378,31 @@
     display: flex;
     justify-content: center;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
 .btn-white {
     background-color: white;
     color: var(--npt-blue);
-    padding: 12px 30px;
+    padding: 15px 35px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: 700;
     transition: all 0.3s;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 .btn-white:hover {
     background-color: #f1f5f9;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
 }
 
 .btn-outline-white {
     background-color: transparent;
     color: white;
-    border: 2px solid white;
-    padding: 12px 30px;
+    border: 2px solid rgba(255,255,255,0.3);
+    padding: 15px 35px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: 700;
@@ -296,16 +412,14 @@
 .btn-outline-white:hover {
     background-color: white;
     color: var(--npt-blue);
+    border-color: white;
 }
 
 /* Mobile Responsive */
 @media (max-width: 900px) {
-    .anniversary-number {
-        font-size: 4rem;
-    }
-
     .story-grid {
         grid-template-columns: 1fr;
+        gap: 40px;
     }
     
     .story-content {
@@ -322,6 +436,12 @@
 
     .values-grid {
         grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    /* Ensure flex/grid works on mobile */
+    .value-card {
+        grid-template-columns: 70px 1fr;
     }
 
     .header-title {
