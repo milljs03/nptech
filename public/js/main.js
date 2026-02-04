@@ -7,7 +7,7 @@ console.log("NPTech App Running");
 // --- 0. Fix Favicon 404 ---
 const favicon = document.createElement('link');
 favicon.rel = 'shortcut icon';
-favicon.href = 'assets/images/NPtech_logo.png';
+favicon.href = 'assets/images/favicon.png';
 document.head.appendChild(favicon);
 
 // --- 0.1 Load Header ---

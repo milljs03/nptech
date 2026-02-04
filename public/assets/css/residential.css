@@ -443,193 +443,174 @@
 .quote-author span { color: #64748b; font-size: 0.9rem; }
 
 /* --- Promotions Section (Grid) --- */
+/* --- NEW "Ways to Save" Design --- */
+/* --- Cohesive "Ways to Save" Section --- */
 .promotions-section {
-    padding: 60px 20px;
-    background-color: white; /* Clean background */
-    margin-top: 20px;
-    border-top: 1px solid #f1f5f9;
+    padding: 120px 20px;
+    background-color: #f1f5f9;
+    background-image: radial-gradient(var(--npt-blue) 0.5px, transparent 0.5px);
+    background-size: 24px 24px;
+    background-attachment: fixed;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    position: relative;
+}
+
+/* Add a subtle inner shadow to the section to give it depth */
+.promotions-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 100px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.03), transparent);
+    pointer-events: none;
+}
+
+.promotions-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.promotions-section .section-title {
+    font-size: 2.75rem;
+    margin-bottom: 10px;
+    color: var(--npt-black);
+}
+
+.promotions-section .section-subtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin-bottom: 60px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .promotions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); /* Ensure wide enough for side-by-side */
+    display: flex;
+    flex-direction: column;
     gap: 30px;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
+/* Feature Plate Design */
 .promo-card {
+    display: flex;
     background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    border-radius: 24px;
     overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    /* Side-by-side layout using Grid */
-    display: grid;
-    grid-template-columns: 40% 60%; /* Fixed ratio: Header Left, Body Right */
-    grid-template-rows: 1fr auto;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.03); 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 30px -5px rgba(0,0,0,0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid transparent;
 }
 
 .promo-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 20px 40px rgba(6, 99, 175, 0.15);
     border-color: var(--npt-blue);
 }
 
-/* Left Side: Header/Description */
+/* The "Tag" or "Incentive" side */
 .promo-header {
-    background: #ffffff;
-    padding: 25px; /* Tighter padding */
+    flex: 0 0 35%;
+    background: linear-gradient(135deg, var(--npt-blue) 0%, var(--npt-dark-blue) 100%);
+    color: white;
+    padding: 40px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Top align */
-    border-right: 1px solid #f1f5f9;
+    justify-content: center;
+    position: relative;
+}
+
+/* Swapped Gift Icon for favicon.png Watermark */
+.promo-header::after {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 160px;
+    height: 160px;
+    background-image: url('public/assets/images/favicon.png');
+    background-image: url('../images/favicon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.3;
+    transform: rotate(-15deg);
+    pointer-events: none;
 }
 
 .promo-header h3 {
-    font-size: 1.4rem;
-    margin: 0 0 10px 0;
+    color: white;
+    font-size: 1.75rem;
+    margin-bottom: 15px;
     line-height: 1.2;
-    font-family: var(--font-heading);
     font-weight: 800;
-    color: var(--npt-blue); /* Requested Blue Title */
-    text-align: left;
 }
 
 .promo-header p {
-    font-size: 0.95rem;
-    color: #475569;
-    margin: 0;
+    color: rgba(255,255,255,0.9);
+    font-size: 1rem;
     line-height: 1.5;
-    text-align: left;
 }
 
-/* Right Side: Includes & Terms */
+/* The "Details" side */
 .promo-body {
-    padding: 25px; /* Tighter padding */
+    flex: 1;
+    padding: 40px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Top align */
-    background-color: #fcfcfc; /* Very subtle contrast */
+    justify-content: center;
+    background-color: white;
 }
 
-/* Includes List */
 .promo-includes {
     list-style: none;
-    padding: 0;
-    margin: 0 0 15px 0;
-    text-align: left;
+    margin-bottom: 25px;
 }
 
 .promo-includes li {
-    margin-bottom: 8px;
-    color: var(--npt-black);
     font-weight: 600;
-    font-size: 0.95rem;
+    color: var(--npt-black);
+    margin-bottom: 12px;
     display: flex;
-    align-items: flex-start; /* Align icon to top of text line */
-    gap: 10px;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 1.05rem;
 }
 
 .promo-includes li i {
-    color: #16a34a; /* Green check */
-    font-size: 0.9rem;
-    margin-top: 3px; /* Optical alignment */
-}
-
-.promo-divider {
-    height: 1px;
-    background: #e2e8f0;
-    margin: 10px 0 15px; /* Tighter margin */
-    width: 100%;
-}
-
-/* Terms Section */
-.terms-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    color: #94a3b8;
-    font-weight: 700;
-    margin-bottom: 5px;
-    letter-spacing: 0.5px;
-    text-align: left;
+    color: #16a34a; /* Green success check */
+    margin-top: 4px;
 }
 
 .promo-terms {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-    color: #64748b;
     font-size: 0.85rem;
-    text-align: left;
+    color: #94a3b8;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 20px;
     line-height: 1.4;
 }
 
-.promo-terms li {
-    margin-bottom: 4px;
-    position: relative;
-    padding-left: 12px;
-}
-
-.promo-terms li::before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    color: #cbd5e1;
-    line-height: 1.4;
-}
-
-/* Footer (Full Width Button) */
-.promo-footer {
-    grid-column: 1 / -1; /* Span entire width */
-    padding: 15px 25px;
-    background: white;
-    border-top: 1px solid #e2e8f0;
-    text-align: right;
-}
-
-.promo-btn {
-    display: inline-block;
-    padding: 8px 24px;
-    background: white;
-    color: var(--npt-black);
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s;
-    font-size: 0.9rem;
-}
-
-.promo-btn:hover {
-    border-color: var(--npt-black);
-    background: var(--npt-black);
-    color: white;
-}
-
-@media (max-width: 768px) {
-    .promotions-grid {
-        grid-template-columns: 1fr;
-    }
-    
+/* Mobile Responsiveness */
+@media (max-width: 850px) {
     .promo-card {
-        grid-template-columns: 1fr; /* Stack vertically on mobile */
-        grid-template-rows: auto auto auto;
+        flex-direction: column;
     }
-    
     .promo-header {
-        border-right: none;
-        border-bottom: 1px solid #f1f5f9;
-        padding: 20px;
+        flex: none;
+        padding: 30px;
     }
-    
+    .promo-header::after {
+        width: 100px;
+        height: 100px;
+        bottom: -10px;
+        right: -10px;
+    }
     .promo-body {
-        padding: 20px;
+        padding: 30px;
     }
-    
-    .promo-footer {
-        text-align: center;
-        padding: 15px;
+    .promotions-section {
+        padding: 80px 20px;
     }
 }

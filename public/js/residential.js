@@ -231,12 +231,11 @@ async function loadPromotions() {
     if (!promoGrid) return;
 
     try {
-        // Fetch from 'promotions' collection instead of single doc
         const ref = collection(db, 'artifacts', APP_ID, 'public', 'data', 'promotions');
         const snapshot = await getDocs(ref);
 
         if (snapshot.empty) {
-            promoGrid.innerHTML = '<p class="text-center" style="grid-column:1/-1; color:#64748b;">No active promotions at this time.</p>';
+            promoGrid.innerHTML = '<p style="text-align:center; color:#64748b;">No active promotions. Check back soon!</p>';
             return;
         }
 
@@ -244,20 +243,13 @@ async function loadPromotions() {
         snapshot.forEach(doc => {
             const promo = doc.data();
             
-            // Build lists
-            let itemsHtml = '';
-            if (promo.items && Array.isArray(promo.items) && promo.items.length > 0) {
-                itemsHtml = `<ul class="promo-includes">
-                    ${promo.items.map(i => `<li><i class="fa-solid fa-check"></i> ${i}</li>`).join('')}
-                </ul>`;
-            }
+            const items = (promo.items || []).map(i => 
+                `<li><i class="fa-solid fa-star"></i> ${i}</li>`
+            ).join('');
 
-            let termsHtml = '';
-            if (promo.terms && Array.isArray(promo.terms) && promo.terms.length > 0) {
-                termsHtml = `<ul class="promo-terms">
-                    ${promo.terms.map(t => `<li>${t}</li>`).join('')}
-                </ul>`;
-            }
+            const terms = (promo.terms || []).map(t => 
+                `<span>${t}</span>`
+            ).join(' • ');
 
             const card = document.createElement('div');
             card.className = 'promo-card';
@@ -267,17 +259,16 @@ async function loadPromotions() {
                     <p>${promo.description || ''}</p>
                 </div>
                 <div class="promo-body">
-                    ${itemsHtml}
-                    ${itemsHtml && termsHtml ? '<div class="promo-divider"></div>' : ''}
-                    ${termsHtml ? '<div class="terms-label">Eligibility:</div>' + termsHtml : ''}
-                </div>
-                <div class="promo-footer">
-                    <a href="contact.html" class="promo-btn">Check Eligibility</a>
+                    <ul class="promo-includes">
+                        ${items}
+                    </ul>
+                    <div class="promo-terms">
+                        ${terms}
+                    </div>
                 </div>
             `;
             promoGrid.appendChild(card);
         });
-
     } catch (err) {
         console.error("Error loading promotions:", err);
     }
