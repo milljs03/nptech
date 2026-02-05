@@ -5,6 +5,8 @@ import { collection, getDocs, query, orderBy, doc, getDoc } from "https://www.gs
 
 const APP_ID = '162296779236';
 
+let allPlans = []; // Store all plans globally
+
 document.addEventListener('DOMContentLoaded', async () => {
     
     // --- 1. Auth & Init ---
@@ -20,49 +22,64 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             // Using specific appId path '162296779236' to match Admin saves
             const plansRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'plans');
-            console.log(`Fetching plans from: artifacts/${APP_ID}/public/data/plans`);
-            
             const snapshot = await getDocs(plansRef);
             
-            let plans = [];
             snapshot.forEach(doc => {
                 const data = doc.data();
                 data.price = Number(data.price); 
-                plans.push(data);
+                allPlans.push(data);
             });
-            console.log(`Plans loaded: ${plans.length}`);
+            console.log(`Plans loaded: ${allPlans.length}`);
 
             // Fallback if DB is empty
-            if (plans.length === 0) {
+            if (allPlans.length === 0) {
                 console.log("Using default NPTech plans.");
-                plans = [
+                allPlans = [
+                    // Fiber
                     { 
-                        name: "Basic", speed: "250 Mbps", price: 55, 
+                        name: "Basic Fiber", speed: "250 Mbps", price: 55, type: "fiber",
                         description: "Perfect for browsing, email, and HD streaming on a few devices.",
                         features: ["Unlimited Data", "Free Install*", "No Contracts"], isPopular: false
                     },
                     { 
-                        name: "Pro", speed: "500 Mbps", price: 75, 
+                        name: "Pro Fiber", speed: "500 Mbps", price: 75, type: "fiber",
                         description: "Ideal for families. Stream 4K on multiple devices seamlessly.",
                         features: ["Unlimited Data", "Free Install*", "No Contracts"], isPopular: true 
                     },
                     { 
-                        name: "Giga", speed: "1 Gbps", price: 95, 
+                        name: "Giga Fiber", speed: "1 Gbps", price: 95, type: "fiber",
                         description: "The ultimate experience. Smart homes, heavy gaming, and massive downloads.",
                         features: ["Unlimited Data", "Priority Support", "No Contracts"], isPopular: false
+                    },
+                    // Cable
+                     { 
+                        name: "Cable 100", speed: "100 Mbps", uploadSpeed: "10 Mbps", price: 45, type: "cable",
+                        description: "Good for everyday internet use and streaming on one or two devices.",
+                        features: ["Reliable Connection", "Bundle with TV", "No Contracts"], isPopular: false
+                    },
+                    // DSL
+                    { 
+                        name: "DSL Basic", speed: "10 Mbps", uploadSpeed: "1 Mbps", price: 40, type: "dsl",
+                        description: "For light internet users, mainly for email and basic browsing.",
+                        features: ["Affordable", "Available Widely"], isPopular: false
                     }
                 ];
             }
 
-            // Sort by price (Low to High)
-            plans.sort((a, b) => a.price - b.price);
+            // Initial render (default to fiber)
+            renderPlans('fiber');
 
-            if(loadingEl) loadingEl.classList.add('hidden');
-            plansGrid.classList.remove('hidden');
-            plansGrid.innerHTML = plans.map((plan, index) => generatePlanCard(plan, index)).join('');
-            
-            // Inject Addons
-            injectAddonsSection(plansGrid);
+            // Setup Toggle Buttons
+            const toggleButtons = document.querySelectorAll('.plan-toggle-btn');
+            toggleButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active class
+                    toggleButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    // Render plans for the selected type
+                    renderPlans(btn.dataset.planType);
+                });
+            });
 
         } catch (error) {
             console.error("Error rendering plans:", error);
@@ -81,6 +98,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadPromotions();
 });
 
+// --- Helper: Render Plans by Type ---
+function renderPlans(planType) {
+    const plansGrid = document.getElementById('plans-grid');
+    const loadingEl = document.getElementById('loading-indicator');
+    const errorEl = document.getElementById('error-message');
+
+    if (!plansGrid) return;
+
+    const filteredPlans = allPlans.filter(p => p.type === planType);
+    
+    // Sort by price (Low to High)
+    filteredPlans.sort((a, b) => a.price - b.price);
+
+    if(loadingEl) loadingEl.classList.add('hidden');
+    plansGrid.classList.remove('hidden');
+    plansGrid.innerHTML = filteredPlans.map((plan, index) => generatePlanCard(plan, index)).join('');
+    
+    injectAddonsSection(plansGrid);
+}
+
 // --- Helper: Generate Plan Card ---
 function generatePlanCard(plan, index) {
     const isPopular = plan.isPopular === true || plan.isPopular === "true";
@@ -90,17 +127,39 @@ function generatePlanCard(plan, index) {
     const features = Array.isArray(plan.features) ? plan.features : ["Local Service", "No Contracts"];
     const featuresHtml = features.map(f => `<div class="highlight-text"><i class="fa-solid fa-check"></i> ${f}</div>`).join('');
 
+    // --- Speed Display Logic ---
+    let speedVal, speedLabel;
+    if (plan.uploadSpeed && plan.uploadSpeed !== plan.speed) {
+        // Asymmetrical speeds (Cable/DSL)
+        speedVal = `${plan.speed} <span class="speed-divider">/</span> ${plan.uploadSpeed}`;
+        speedLabel = "Download / Upload";
+    } else {
+        // Symmetrical speed (Fiber)
+        speedVal = plan.speed;
+        speedLabel = "Download & Upload";
+    }
+    const speedDisplayHtml = `<div class="speed-display"><div class="speed-val">${speedVal}</div><div class="speed-label">${speedLabel}</div></div>`;
+
+    // Conditionally render sign-up button or a placeholder message
+    const signUpButton = plan.type === 'fiber'
+        ? `<a href="https://fiber-service-query.web.app/query.html" class="sign-up-btn">Sign Up Now</a>`
+        : `<div class="signup-placeholder">Call (574) 831-2176 to Order</div>`;
+
+    // Add provider logo for cable plans
+    const providerLogo = plan.type === 'cable' ? '<img src="assets/images/qc.png" alt="Quality Cable" class="provider-logo" />' : '';
+
     return `
         <div class="pricing-box ${highlightClass}">
             ${badge}
             <div class="pricing-box-inner">
+                ${providerLogo}
                 <h3 class="panel-heading">${plan.name}</h3>
                 <div class="price-wrapper"><span class="price">$${plan.price}<small>/mo</small></span></div>
-                <div class="speed-display"><div class="speed-val">${plan.speed}</div><div class="speed-label">Download & Upload</div></div>
+                ${speedDisplayHtml}
                 <div class="plan-description">${plan.description || "Reliable fiber internet."}</div>
                 <div class="core-benefits">${featuresHtml}</div>
                 <div class="broadband-label-container">${generateBroadbandLabel(plan, labelId)}</div>
-                 <a href="https://fiber-service-query.web.app/query.html" class="sign-up-btn">Sign Up Now</a>
+                 ${signUpButton}
             </div>
         </div>
     `;

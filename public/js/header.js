@@ -14,6 +14,7 @@ export function loadHeader() {
             <li><a href="residential.html">Residential</a></li>
             <li><a href="index.html#divisions">Divisions</a></li>
             <li><a href="about.html">About Us</a></li>
+            <li><a href="blog.html">News</a></li>
             <li><a href="careers.html">Careers</a></li>
             <li><a href="contact.html">Contact</a></li>
             

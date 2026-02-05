@@ -49,6 +49,39 @@
     margin: 0 auto 60px;
 }
 
+/* --- Plan Type Toggle --- */
+.plan-toggle-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+    background-color: #e2e8f0;
+    padding: 6px;
+    border-radius: 50px;
+    max-width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.plan-toggle-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    border-radius: 50px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1rem;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.plan-toggle-btn.active {
+    background-color: white;
+    color: var(--npt-blue);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
 /* --- Pricing Grid Layout --- */
 .pricing-container {
     display: flex;
@@ -100,6 +133,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    position: relative;
 }
 
 /* --- "Best Value" (Popular) Styling --- */
@@ -199,6 +233,13 @@
     font-weight: 800;
     color: var(--npt-blue); /* Blue for speed */
 }
+.speed-val .speed-divider {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #94a3b8;
+    margin: 0 5px;
+}
+
 .speed-label {
     font-size: 0.8rem;
     font-weight: 700;
@@ -245,6 +286,16 @@
     flex-shrink: 0;
 }
 
+/* Provider Logo (QC) */
+.provider-logo {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    width: 50px;
+    height: auto;
+    opacity: 0.6;
+}
+
 /* Buttons */
 .sign-up-btn {
     background-color: var(--npt-black);
@@ -280,6 +331,19 @@
 .pricing-box.popular .sign-up-btn:hover {
     background: linear-gradient(135deg, var(--npt-lt-blue) 0%, var(--npt-blue) 100%);
     box-shadow: 0 8px 20px rgba(6, 99, 175, 0.4);
+}
+
+/* Placeholder for non-signup plans */
+.signup-placeholder {
+    text-align: center;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    color: var(--npt-gray);
+    padding: 1rem;
+    margin-top: auto;
+    margin-bottom: 25px;
+    border: 2px dashed var(--npt-border);
+    border-radius: 8px;
 }
 
 /* Broadband Facts */

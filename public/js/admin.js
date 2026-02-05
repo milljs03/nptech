@@ -337,8 +337,13 @@ async function loadPlans() {
             const plan = doc.data();
             const card = document.createElement('div');
             card.className = 'admin-card';
+            const typeBadge = plan.type ? `<span class="badge bg-blue">${plan.type}</span>` : '';
+
             card.innerHTML = `
-                <h3>${plan.name} <span style="font-size:0.8rem; color:var(--npt-blue);">$${plan.price}</span></h3>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h3 style="margin:0;">${plan.name} <span style="font-size:0.8rem; color:var(--npt-blue);">$${plan.price}</span></h3>
+                    ${typeBadge}
+                </div>
                 <p>${plan.speed} - ${plan.description?.substring(0, 50)}...</p>
                 <div class="card-actions">
                     ${isAdmin ? `<button class="btn-sm btn-outline btn-edit" data-id="${doc.id}" data-type="plan">Edit</button>` : ''}
@@ -655,10 +660,19 @@ function openEditModal(type, id, data = null) {
     if (type === 'plan') {
         modalFields.innerHTML = `
             <div><label class="form-label">Plan Name</label><input type="text" name="name" class="form-control" value="${data?.name || ''}" required></div>
-            <div><label class="form-label">Price</label><input type="number" name="price" class="form-control" value="${data?.price || ''}" required></div>
-            <div><label class="form-label">Speed</label><input type="text" name="speed" class="form-control" value="${data?.speed || ''}" required></div>
+            <div><label class="form-label">Price</label><input type="number" step="0.01" name="price" class="form-control" value="${data?.price || ''}" required></div>
+            <div><label class="form-label">Download Speed</label><input type="text" name="speed" class="form-control" value="${data?.speed || ''}" required placeholder="e.g. 100 Mbps"></div>
+            <div><label class="form-label">Upload Speed (Optional)</label><input type="text" name="uploadSpeed" class="form-control" value="${data?.uploadSpeed || ''}" placeholder="e.g. 10 Mbps"></div>
             <div><label class="form-label">Description</label><textarea name="description" class="form-control" rows="3">${data?.description || ''}</textarea></div>
             <div style="margin-top:10px;"><input type="checkbox" name="isPopular" ${data?.isPopular ? 'checked' : ''}> <label class="form-label" style="display:inline;">Best Value (Highlight)</label></div>
+            <div style="margin-top:15px;">
+                <label class="form-label">Plan Type</label>
+                <select name="type" class="form-control" required>
+                    <option value="fiber" ${data?.type === 'fiber' ? 'selected' : ''}>Fiber</option>
+                    <option value="cable" ${data?.type === 'cable' ? 'selected' : ''}>Cable Modem</option>
+                    <option value="dsl" ${data?.type === 'dsl' ? 'selected' : ''}>DSL</option>
+                </select>
+            </div>
         `;
     } else if (type === 'promotion') {
         // NEW Promotion Fields
@@ -744,6 +758,7 @@ function openEditModal(type, id, data = null) {
         modalFields.innerHTML = `
             <div><label class="form-label">Title</label><input type="text" name="title" class="form-control" value="${data?.title || ''}" required></div>
             <div><label class="form-label">Date</label><input type="date" name="date" class="form-control" value="${postDate}" required></div>
+            <div><label class="form-label">Image URL (Optional)</label><input type="url" name="imageUrl" class="form-control" value="${data?.imageUrl || ''}" placeholder="https://..."></div>
             <div><label class="form-label">Excerpt</label><textarea name="excerpt" class="form-control" rows="3" required>${data?.excerpt || ''}</textarea></div>
             <div><label class="form-label">Link URL</label><input type="text" name="linkUrl" class="form-control" value="${data?.linkUrl || ''}" required></div>
             <div><label class="form-label">Link Text</label><input type="text" name="linkText" class="form-control" value="${data?.linkText || 'Read More'}" required></div>
