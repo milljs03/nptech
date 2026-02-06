@@ -143,28 +143,105 @@ if (leadsTableBody) {
 
 async function loadDashboard() {
     try {
+        // --- Load Core Stats ---
         const leadsRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'leads');
         const leadsSnap = await getDocs(leadsRef);
-        const statLeads = document.getElementById('stat-leads');
-        if(statLeads) statLeads.textContent = leadsSnap.size;
+        document.getElementById('stat-leads').textContent = leadsSnap.size;
 
-        const plansRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'plans');
-        const plansSnap = await getDocs(plansRef);
-        const statPlans = document.getElementById('stat-plans');
-        if(statPlans) statPlans.textContent = plansSnap.size;
-
-        const hoodsRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'neighborhoods');
-        const hoodsSnap = await getDocs(hoodsRef);
-        const statHoods = document.getElementById('stat-hoods');
-        if(statHoods) statHoods.textContent = hoodsSnap.size;
-
+        // --- Load Analytics ---
         const viewsRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'analytics_pageviews');
         const viewsSnap = await getDocs(viewsRef);
-        const statViews = document.getElementById('stat-views');
-        if(statViews) statViews.textContent = viewsSnap.size;
+        const views = [];
+        viewsSnap.forEach(doc => views.push(doc.data()));
+
+        // --- Process Analytics Data ---
+        const totalViews = views.length;
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const viewsToday = views.filter(v => (v.timestamp.toDate ? v.timestamp.toDate() : new Date(v.timestamp)) >= today).length;
+
+        const uniqueSessions = new Set(views.map(v => v.sessionId)).size;
+
+        const pageCounts = views.reduce((acc, view) => {
+            const page = view.page || 'unknown';
+            acc[page] = (acc[page] || 0) + 1;
+            return acc;
+        }, {});
+        const topPages = Object.entries(pageCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+        const referrerCounts = views.reduce((acc, view) => {
+            let referrer = view.referrer || 'direct';
+            if (referrer && referrer !== 'direct' && referrer.includes('//')) {
+                try {
+                    referrer = new URL(referrer).hostname.replace('www.', '');
+                } catch (e) { /* ignore invalid urls */ }
+            }
+            if (referrer === window.location.hostname) {
+                referrer = 'internal';
+            }
+            acc[referrer] = (acc[referrer] || 0) + 1;
+            return acc;
+        }, {});
+        const topReferrers = Object.entries(referrerCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+        const deviceCounts = views.reduce((acc, view) => {
+            const device = view.deviceType || 'unknown';
+            acc[device] = (acc[device] || 0) + 1;
+            return acc;
+        }, {});
+
+        // --- Update DOM ---
+        document.getElementById('stat-views-total').textContent = totalViews;
+        document.getElementById('stat-views-today').textContent = viewsToday;
+        document.getElementById('stat-sessions').textContent = uniqueSessions;
+
+        // Top Pages
+        const topPagesEl = document.getElementById('analytics-top-pages');
+        if (topPages.length > 0) {
+            topPagesEl.innerHTML = topPages.map(([name, count]) => `
+                <li><span class="item-name">${name}</span><span class="item-count">${count}</span></li>
+            `).join('');
+        } else {
+            topPagesEl.innerHTML = '<li>No page data yet.</li>';
+        }
+
+        // Top Referrers
+        const topReferrersEl = document.getElementById('analytics-top-referrers');
+        if (topReferrers.length > 0) {
+            topReferrersEl.innerHTML = topReferrers.map(([name, count]) => `
+                <li><span class="item-name">${name}</span><span class="item-count">${count}</span></li>
+            `).join('');
+        } else {
+            topReferrersEl.innerHTML = '<li>No referrer data yet.</li>';
+        }
+
+        // Device Breakdown
+        const devicesEl = document.getElementById('analytics-devices');
+        if (totalViews > 0) {
+            const deviceIcons = { desktop: 'fa-desktop', mobile: 'fa-mobile-screen-button', tablet: 'fa-tablet-screen-button', unknown: 'fa-question' };
+            devicesEl.innerHTML = Object.entries(deviceCounts).map(([name, count]) => {
+                const percentage = ((count / totalViews) * 100).toFixed(1);
+                return `
+                    <div class="device-item">
+                        <div class="device-info">
+                            <i class="fa-solid ${deviceIcons[name] || deviceIcons.unknown}"></i>
+                            <span class="device-name">${name.charAt(0).toUpperCase() + name.slice(1)}</span>
+                        </div>
+                        <span class="device-percentage">${percentage}%</span>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            devicesEl.innerHTML = '<p>No device data yet.</p>';
+        }
 
     } catch (err) {
         console.error("Dashboard Load Error:", err);
+        // Add error state to analytics cards
+        document.getElementById('analytics-top-pages').innerHTML = '<li>Error loading data.</li>';
+        document.getElementById('analytics-top-referrers').innerHTML = '<li>Error loading data.</li>';
+        document.getElementById('analytics-devices').innerHTML = '<p>Error loading data.</p>';
     }
 }
 
@@ -670,7 +747,7 @@ function openEditModal(type, id, data = null) {
                 <select name="type" class="form-control" required>
                     <option value="fiber" ${data?.type === 'fiber' ? 'selected' : ''}>Fiber</option>
                     <option value="cable" ${data?.type === 'cable' ? 'selected' : ''}>Cable Modem</option>
-                    <option value="dsl" ${data?.type === 'dsl' ? 'selected' : ''}>DSL</option>
+                    <option value="vdsl" ${data?.type === 'vdsl' ? 'selected' : ''}>VDSL</option>
                 </select>
             </div>
         `;

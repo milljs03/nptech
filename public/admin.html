@@ -99,22 +99,45 @@
                     <h1>Dashboard Overview</h1>
                     <p>Welcome back, <span class="user-name-display">Admin</span>.</p>
                 </div>
+                <!-- Main Stats -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h3>Total Leads</h3>
                         <p class="stat-value" id="stat-leads">0</p>
                     </div>
                     <div class="stat-card">
-                        <h3>Active Plans</h3>
-                        <p class="stat-value" id="stat-plans">0</p>
+                        <h3>Page Views (Today)</h3>
+                        <p class="stat-value" id="stat-views-today">0</p>
                     </div>
                     <div class="stat-card">
-                        <h3>Neighborhoods</h3>
-                        <p class="stat-value" id="stat-hoods">0</p>
+                        <h3>Unique Sessions</h3>
+                        <p class="stat-value" id="stat-sessions">0</p>
                     </div>
                     <div class="stat-card">
                         <h3>Total Page Views</h3>
-                        <p class="stat-value" id="stat-views">0</p>
+                        <p class="stat-value" id="stat-views-total">0</p>
+                    </div>
+                </div>
+
+                <!-- Analytics Section -->
+                <div class="analytics-section">
+                    <h2 class="section-heading">Site Analytics</h2>
+                    <div class="analytics-grid">
+                        <!-- Top Pages -->
+                        <div class="analytics-card">
+                            <h4>Top Pages</h4>
+                            <ul id="analytics-top-pages" class="analytics-list"><li>Loading...</li></ul>
+                        </div>
+                        <!-- Top Referrers -->
+                        <div class="analytics-card">
+                            <h4>Top Referrers</h4>
+                            <ul id="analytics-top-referrers" class="analytics-list"><li>Loading...</li></ul>
+                        </div>
+                        <!-- Device Breakdown -->
+                        <div class="analytics-card">
+                            <h4>Device Breakdown</h4>
+                            <div id="analytics-devices"><p>Loading...</p></div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -282,5 +305,6 @@
 
     <!-- Updated Script Path: pointing to js/admin.js -->
     <script type="module" src="js/admin.js"></script>
+    <script type="module" src="js/traffic-logger.js"></script>
 </body>
 </html>

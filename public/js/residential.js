@@ -52,14 +52,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         features: ["Unlimited Data", "Priority Support", "No Contracts"], isPopular: false
                     },
                     // Cable
-                     { 
+                     {
                         name: "Cable 100", speed: "100 Mbps", uploadSpeed: "10 Mbps", price: 45, type: "cable",
                         description: "Good for everyday internet use and streaming on one or two devices.",
                         features: ["Reliable Connection", "Bundle with TV", "No Contracts"], isPopular: false
                     },
-                    // DSL
+                    // VDSL
                     { 
-                        name: "DSL Basic", speed: "10 Mbps", uploadSpeed: "1 Mbps", price: 40, type: "dsl",
+                        name: "VDSL Basic", speed: "10 Mbps", uploadSpeed: "1 Mbps", price: 40, type: "vdsl",
                         description: "For light internet users, mainly for email and basic browsing.",
                         features: ["Affordable", "Available Widely"], isPopular: false
                     }

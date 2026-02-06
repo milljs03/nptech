@@ -50,8 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Update Title
                 if (formTitle) {
-                    const titleText = btn.querySelector('.topic-title').textContent;
-                    formTitle.textContent = `Submit Request: ${titleText}`;
+                    const titleElement = btn.querySelector('h3');
+                    if (titleElement) formTitle.textContent = `Submit Request: ${titleElement.textContent}`;
                 }
 
                 // Reset & Show relevant fields
@@ -59,7 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (topic === 'billing') document.getElementById('field-billing')?.classList.remove('hidden');
                 if (topic === 'availability') document.getElementById('field-address')?.classList.remove('hidden');
-                if (topic === 'service') document.getElementById('field-service-type')?.classList.remove('hidden');
+                if (topic === 'service') {
+                    document.getElementById('field-service-type')?.classList.remove('hidden');
+                    document.getElementById('field-address')?.classList.remove('hidden');
+                }
                 if (topic === 'outage') document.getElementById('field-address')?.classList.remove('hidden');
             });
         });
@@ -132,13 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showSuccessState() {
-        const container = document.querySelector('.form-container');
+        const form = document.getElementById('support-form');
         const successMsg = document.getElementById('success-message');
         
-        if (container) container.style.display = 'none';
+        if (form) form.style.display = 'none';
         if (successMsg) {
             successMsg.classList.remove('hidden');
-            successMsg.style.display = 'block';
         }
     }
 });

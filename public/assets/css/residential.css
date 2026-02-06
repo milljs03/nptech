@@ -656,6 +656,21 @@
     line-height: 1.4;
 }
 
+.promo-callout {
+    text-align: center;
+    margin: 60px auto 0;
+    padding: 25px;
+    background-color: #f0f9ff;
+    border-radius: 16px;
+    border: 1px solid var(--npt-lt-blue);
+    max-width: 700px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--npt-dark-blue);
+    line-height: 1.6;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 850px) {
     .promo-card {

@@ -30,7 +30,7 @@
 
 body {
     font-family: var(--font-body);
-    background-color: var(--npt-white);
+    background-color: var(white);
     color: var(--npt-black);
     line-height: 1.7;
     overflow-x: hidden;
